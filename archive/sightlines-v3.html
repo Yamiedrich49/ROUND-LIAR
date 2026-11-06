@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f2e9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>SIGHTLINES · みんなの見た森</title>
+<style>
+:root{--paper:#f6f3ea;--ink:#2e4540;--mute:#748a80;--forest:#2d6859;--sea:#4f9885;--rust:#cf815d;--line:#e5e2d7;--cream:#fffcf3;--shadow:0 16px 42px rgba(59,86,70,.075)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:2px solid var(--sea);outline-offset:3px}
+.app{position:relative;max-width:480px;min-height:100dvh;padding:calc(12px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));margin:auto;overflow:hidden}
+.top{height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px}.brand{font-family:Georgia,'Yu Mincho',serif;font-size:17px;letter-spacing:.13em;font-weight:700}.brand em{font-style:normal;color:var(--sea)}.top-right{display:flex;align-items:center;gap:9px}.stage{font:700 11px ui-sans-serif,system-ui;color:var(--mute);letter-spacing:.09em}.mute{width:34px;height:34px;border:1px solid var(--line);background:#fffaf0;border-radius:50%;display:grid;place-items:center;font-size:16px}
+.intro{text-align:center;margin:10px 0 15px}.eyebrow{color:var(--sea);font-weight:800;letter-spacing:.23em;font-size:10px}.intro h1{font-family:'Hiragino Mincho ProN','Yu Mincho',Georgia,serif;font-weight:700;font-size:clamp(19px,5.7vw,26px);letter-spacing:.04em;margin:9px 0 8px}.intro p{font-size:12px;line-height:1.6;margin:0;color:var(--mute)}
+.scene-wrap{border:1px solid #e3e8db;background:linear-gradient(160deg,#fdfdf5,#eaf4ed 60%,#e8f0e4);border-radius:27px;box-shadow:var(--shadow);padding:0 0 9px;overflow:hidden;position:relative}.scene{display:block;width:100%;height:auto;aspect-ratio:400/408;touch-action:manipulation;cursor:crosshair}.scene-tag{position:absolute;left:16px;top:14px;pointer-events:none;display:flex;align-items:center;gap:7px;color:#5d8878;font-size:10px;font-weight:800;letter-spacing:.16em}.scene-tag::before{content:"";width:7px;height:7px;background:#9ac6b6;border-radius:50%}.scene-foot{display:flex;justify-content:space-between;padding:0px 20px 5px;font-size:11px;color:#6e887b;gap:8px}.scene-foot span:last-child{color:#a0aca4}
+.witness-head{display:flex;align-items:center;justify-content:space-between;margin:18px 3px 10px}.witness-head b{font-size:13px;letter-spacing:.07em}.witness-head small{font-size:10px;color:var(--mute)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wcard{position:relative;background:#fffdf7;border:1px solid #e5e6dc;box-shadow:0 8px 20px rgba(55,78,62,.055);padding:9px;border-radius:19px;min-width:0;text-align:left;transition:transform .18s,box-shadow .18s}.wcard:active{transform:scale(.982)}.card-header{display:flex;align-items:center;gap:7px;padding:0 1px 7px}.animal{font-size:20px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#edf4ea;box-shadow:inset 0 0 0 1px #dbe6d7}.animal.mouse{background:#e7edf1}.animal.lion{background:#fff0d7}.animal.giraffe{background:#f5eddb}.animal.owl{background:#e8ede3}.animal b{font-size:19px}.animal-name{font-size:11px;font-weight:800;white-space:nowrap;line-height:1.25}.animal-note{font-size:9px;font-weight:500;color:#8c9a90;display:block;margin-top:2px}.photo{display:block;width:100%;aspect-ratio:1.52;height:auto;border-radius:12px;background:#d6e7e3}.card-caption{font-size:10px;color:var(--sea);font-weight:800;display:flex;justify-content:space-between;align-items:center;margin:7px 2px 1px}.card-caption .zoom{font-size:13px;color:#a0afa6}
+.actions{display:flex;justify-content:center;margin:16px 0 0;gap:8px}.help,.next{border:1px solid var(--line);background:#fffcf4;color:#728a7c;border-radius:25px;padding:10px 16px;font-weight:700;font-size:11px}.next{border:none;background:var(--forest);color:white;padding:12px 22px;box-shadow:0 6px 14px #326c5a33}.next:disabled{opacity:.4}.mini{font-size:10px;color:#95a89b;text-align:center;line-height:1.6;margin:10px 12px 0}
+.toast{position:fixed;z-index:15;pointer-events:none;left:50%;top:47%;transform:translate(-50%,-50%) scale(.93);width:min(320px,90vw);border-radius:20px;padding:17px 21px;box-shadow:0 20px 65px #2b55452e;background:rgba(255,254,246,.98);border:1px solid #dbe9df;text-align:center;font-size:13px;font-weight:800;opacity:0;transition:opacity .22s,transform .22s}.toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}.toast .sub{display:block;font-weight:500;color:var(--mute);font-size:10px;line-height:1.6;margin-top:5px}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(22,47,38,.55);display:flex;align-items:center;justify-content:center;padding:18px}.modal[hidden]{display:none}.modal-inner{max-width:500px;width:100%;padding:16px;border-radius:24px;background:var(--cream);box-shadow:0 24px 80px #1a383b4d}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modal-head b{font-size:14px}.close{border:1px solid #dfebe3;border-radius:50%;background:white;width:34px;height:34px;font-size:21px;display:grid;place-items:center}.modal-canvas{display:block;width:100%;border-radius:17px}.modal-desc{font-size:12px;text-align:center;color:var(--mute);padding:9px 0 2px}
+.info{border-radius:14px;background:#ecf4e9;color:#476b5a;padding:12px;font-size:11px;line-height:1.8;text-align:left;margin:0 6px 7px}
+@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.intro{margin:3px 0 8px}.intro h1{margin:4px 0}.witness-head{margin:11px 2px 7px}.wcard{padding:7px}.card-header{gap:4px}.animal{width:30px;height:30px;font-size:18px}.scene-wrap{border-radius:21px}.scene-tag{top:10px;left:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="top"><div class="brand">SIGHT<em>LINES</em><span style="display:block;font:500 8px ui-sans-serif,system-ui;letter-spacing:.22em;color:#97afa3;margin-top:3px">FOREST / VIEWPOINTS</span></div><div class="top-right"><span class="stage" id="stage">01 / 06</span><button class="mute" id="sound" aria-label="音の切替">♫</button></div></header>
+ <section class="intro"><div class="eyebrow">THE HIDDEN FOX</div><h1 id="headline">キツネはどこにいる？</h1><p id="desc">ふたりが見た景色を合わせて、隠れ家をタップしよう。</p></section>
+ <section class="scene-wrap"><div class="scene-tag">YOUR VIEW · 正面から見た森</div><canvas id="scene" class="scene" width="800" height="816" aria-label="正面の森。6つの隠れ家をタップして答えます"></canvas><div class="scene-foot"><span id="scene-message">６つの茂みの、どこかに隠れている</span><span>↳ tap a hideout</span></div></section>
+ <div class="witness-head"><b>みんなの見た景色</b><small>違う方向から見た、同じ森</small></div>
+ <section class="cards" id="cards"></section>
+ <div class="actions"><button class="help" id="help">? どうやって考える？</button><button class="next" id="next" hidden>次の森へ →</button></div>
+ <p class="mini">正面の景色は回せません。動物たちの視点だけがヒント。</p>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<div class="modal" id="modal" hidden><div class="modal-inner"><div class="modal-head"><b id="modal-title"></b><button class="close" id="close" aria-label="閉じる">×</button></div><canvas class="modal-canvas" id="modal-canvas" width="900" height="540"></canvas><div class="modal-desc" id="modal-desc"></div></div></div>
+<script>
+(()=>{'use strict';
+const C=document.querySelector('#scene'),ctx=C.getContext('2d'),cards=document.querySelector('#cards'),modal=document.querySelector('#modal'),modalTitle=document.querySelector('#modal-title'),modalDesc=document.querySelector('#modal-desc'),modalCanvas=document.querySelector('#modal-canvas'),toast=document.querySelector('#toast');
+const P={mouse:{name:'ネズミ',emoji:'🐭',dir:'W',camera:'西から · 低い目線',cl:'mouse',height:0.22},lion:{name:'ライオン',emoji:'🦁',dir:'E',camera:'東から · ふつうの目線',cl:'lion',height:0.48},giraffe:{name:'キリン',emoji:'🦒',dir:'S',camera:'南から · 高い目線',cl:'giraffe',height:0.76},owl:{name:'フクロウ',emoji:'🦉',dir:'N',camera:'北から · 空の目線',cl:'owl',height:1.0}};
+const spots=Array.from({length:6},(_,i)=>({id:i,x:[-1.08,0,1.08][i%3],z:i<3?-.76:.70}));
+const levels=[
+ {fox:4,w:['mouse','owl'],seed:11},
+ {fox:0,w:['lion','giraffe'],seed:22},
+ {fox:5,w:['mouse','giraffe'],seed:31},
+ {fox:2,w:['lion','owl'],seed:43},
+ {fox:1,w:['giraffe','mouse'],seed:55},
+ {fox:3,w:['owl','lion'],seed:66}
+];
+let stage=0,done=false,revealed=false,wrongSpot=-1,objects=[],tHandle=0,audio=null,muted=false,modalKey=null;
+// The exact same forest objects are projected into the main diorama and each witness's picture.
+function rand(seed){let s=seed>>>0;return ()=>{s=(Math.imul(1664525,s)+1013904223)>>>0;return s/4294967296}}
+function terrain(seed){const r=rand(seed);return [
+ {type:'tree',x:-1.63,z:-.42,scale:1.18},
+ {type:'tree',x:1.57,z:.20,scale:1.14},
+ {type:'tree',x:.52,z:-1.36,scale:.95},
+ {type:'stone',x:-.58,z:.13,scale:.95},
+ {type:'stone',x:1.37,z:-1.01,scale:.70},
+ {type:'bush',x:-1.57,z:1.03,scale:.86},
+ {type:'bush',x:.47,z:1.15,scale:.66},
+ ...Array.from({length:9},(_,i)=>({type:'flower',x:-1.65+r()*3.4,z:-1.2+r()*2.5,scale:.56+r()*.3,color:i%3}))
+]}
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function setup2d(c,w,h){const d=Math.min(2.5,window.devicePixelRatio||1);c.width=Math.round(w*d);c.height=Math.round(h*d);const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.imageSmoothingEnabled=true;return x}
+function roundRect(g,x,y,w,h,r,fill){g.beginPath();g.roundRect(x,y,w,h,r);g.fillStyle=fill;g.fill()}
+function ellipse(g,x,y,rx,ry,fill){g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fillStyle=fill;g.fill()}
+function line(g,coords,color,width=1){g.beginPath();coords.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.lineWidth=width;g.lineJoin='round';g.lineCap='round';g.strokeStyle=color;g.stroke()}
+function poly(g,points,color){g.beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();g.fillStyle=color;g.fill()}
+function projection(x,z,h=0){return {x:200 +x*88 +z*32,y:196+z*86-h*53}}
+function rock(g,x,y,s){g.save();g.translate(x,y);g.scale(s,s);ellipse(g,0,3,27,9,'#75978e22');poly(g,[[-24,-2],[-18,-19],[2,-30],[22,-18],[27,-5],[13,2]],'#abb9b1');poly(g,[[-24,-2],[-18,-19],[2,-30],[-3,-8],[-8,4]],'#ccd3c9');poly(g,[[2,-30],[22,-18],[27,-5],[-3,-8]],'#829b94');poly(g,[[-17,-9],[2,-16],[10,-10]],'#dbe0d6');g.restore()}
+function tree(g,x,y,s){g.save();g.translate(x,y);g.scale(s,s);ellipse(g,0,6,23,8,'#486e5b23');poly(g,[[-6,0],[-5,-51],[6,-51],[7,0]],'#a98666');poly(g,[[-5,-3],[-5,-44],[-1,-46],[-1,-4]],'#d6b491');ellipse(g,0,-58,33,35,'#3e7d69');ellipse(g,-10,-61,26,31,'#598f79');ellipse(g,13,-61,23,30,'#376f60');ellipse(g,-11,-77,20,19,'#6fa48b');ellipse(g,5,-86,20,17,'#79ad91');ellipse(g,-19,-62,8,6,'#8fc6a2');g.restore()}
+function shrub(g,x,y,s,flair=0){g.save();g.translate(x,y);g.scale(s,s);ellipse(g,0,5,35,11,'#356b571c');ellipse(g,-12,-9,23,18,'#639d7f');ellipse(g,13,-14,24,19,'#4f8b72');ellipse(g,-1,-19,24,21,'#78ae8c');ellipse(g,20,-5,17,14,'#387963');ellipse(g,-19,-7,10,8,'#90c5a1');ellipse(g,0,-21,10,7,'#a2cba9');if(flair){ellipse(g,-7,-25,2,2,'#eee9b8');ellipse(g,18,-16,2,2,'#f8d9b5')}g.restore()}
+function flower(g,x,y,s,color){g.save();g.translate(x,y);g.scale(s,s);line(g,[[0,0],[0,-11]],'#699d7d',1.4);const pal=['#dfa991','#d7bb6e','#f2e6b8'];const fill=pal[color||0];for(let i=0;i<5;i++){let a=i*Math.PI*2/5;ellipse(g,Math.cos(a)*4,Math.sin(a)*4-11,3,2.8,fill)}ellipse(g,0,-11,2,2,'#fff9e9');g.restore()}
+function foxy(g,x,y,s=1,tail=true){g.save();g.translate(x,y);g.scale(s,s);ellipse(g,0,3,15,5,'#244b3c30');if(tail){g.save();g.translate(13,-10);g.rotate(-.43);ellipse(g,7,-7,19,9,'#c97551');ellipse(g,22,-7,6,5,'#fff0d8');g.restore()}ellipse(g,-1,-18,15,19,'#cb7756');poly(g,[[-18,-27],[-17,-59],[-3,-42]],'#bf664b');poly(g,[[2,-42],[17,-60],[17,-26]],'#c66a4d');poly(g,[[-15,-32],[-13,-51],[-4,-40]],'#f0c29c');poly(g,[[4,-40],[13,-53],[14,-31]],'#edb58f');ellipse(g,0,-28,21,18,'#db8258');poly(g,[[-20,-25],[0,-13],[20,-25],[13,-12],[-13,-12]],'#fff2dd');ellipse(g,0,-16,4,3,'#465850');ellipse(g,-8,-31,2,3,'#30463e');ellipse(g,8,-31,2,3,'#30463e');g.restore()}
+function mainScene(){const g=ctx;g.save();g.setTransform(C.width/400,0,0,C.height/408,0,0);g.clearRect(0,0,400,408);let grad=g.createLinearGradient(0,0,0,408);grad.addColorStop(0,'#fafdf7');grad.addColorStop(.65,'#e6f1e6');grad.addColorStop(1,'#d2e4d1');g.fillStyle=grad;g.fillRect(0,0,400,408);
+ // Gentle depth haze and miniature tabletop.
+ ellipse(g,202,252,203,142,'#5488750c');ellipse(g,203,237,191,138,'#bcd7b5');ellipse(g,203,222,189,130,'#deead1');ellipse(g,197,209,161,104,'#e9efdb');
+ let rr=rand(levels[stage].seed+899);for(let i=0;i<42;i++){let x=30+rr()*344,y=135+rr()*182;if(Math.pow((x-200)/177,2)+Math.pow((y-222)/125,2)<1) ellipse(g,x,y,rr()*2+1,rr()*1.3+.5,'#78a88b38')}
+ if(done){const answer=spots[levels[stage].fox];g.save();g.globalAlpha=.17;
+  let a=projection(-1.45,answer.z),b=projection(1.45,answer.z);line(g,[[a.x,a.y],[b.x,b.y]],'#54a889',64);
+  a=projection(answer.x,-1.03);b=projection(answer.x,1.03);line(g,[[a.x,a.y],[b.x,b.y]],'#e0ad62',48);
+  g.restore()}
+ const scene=[];for(const ob of objects){const p=projection(ob.x,ob.z);scene.push({...ob,px:p.x,py:p.y,depth:ob.z})}
+ for(const s of spots){const p=projection(s.x,s.z);scene.push({type:'spot',...s,px:p.x,py:p.y,depth:s.z})}
+ scene.sort((a,b)=>a.depth-b.depth || (a.type==='spot'?1:-1));
+ for(const o of scene){if(o.type==='tree')tree(g,o.px,o.py,o.scale*.92);if(o.type==='stone')rock(g,o.px,o.py,o.scale*.94);if(o.type==='bush')shrub(g,o.px,o.py,o.scale);if(o.type==='flower')flower(g,o.px,o.py,o.scale,o.color);if(o.type==='spot'){
+   // Identical hiding shrubs. Markers are offset below the shrub, never over a fox.
+   ellipse(g,o.px,o.py+7,34,11,'#477a6334');shrub(g,o.px,o.py,o.z<0?.89:1.0,1);
+   const flagY=o.py+24;
+   ellipse(g,o.px,flagY,13,13,wrongSpot===o.id?'#e8b9a9':done&&levels[stage].fox===o.id?'#fff1cf':'#fffdf7');
+   g.beginPath();g.arc(o.px,flagY,13,0,Math.PI*2);g.strokeStyle=wrongSpot===o.id?'#d39784':'#bdd1c0';g.lineWidth=1.2;g.stroke();
+   g.fillStyle='#577f6f';g.textAlign='center';g.textBaseline='middle';g.font='700 12px system-ui';g.fillText(String(o.id+1),o.px,flagY+1);
+   if(done&&o.id===levels[stage].fox){foxy(g,o.px,o.py-9,.77,true)}
+ }}
+ // Atmospheric flecks / border emphasis.
+ g.strokeStyle='#e4eadc';g.lineWidth=1;g.beginPath();g.ellipse(204,236,190,135,0,0,Math.PI*2);g.stroke();
+ if(done){g.textAlign='center';g.font='700 13px system-ui';g.fillStyle='#3b8069';g.fillText('FOUND YOU!',200,370)}
+ g.restore()}
+function screenU(dir,x,z){if(dir==='W')return 205 - z*122;if(dir==='E')return 205 + z*122;if(dir==='N')return 205 + x*95;return 205-x*95}
+function depth(dir,x,z){if(dir==='W')return -x;if(dir==='E')return x;if(dir==='N')return -z;return z}
+function animalRender(canvas,who,large=false){const info=P[who],g=canvas.getContext('2d'),w=400,h=230;g.save();g.setTransform(canvas.width/w,0,0,canvas.height/h,0,0);g.clearRect(0,0,w,h);
+ const grd=g.createLinearGradient(0,0,0,h);grd.addColorStop(0,info.height>.7?'#e7f4ed':'#e7f2f3');grd.addColorStop(.62,'#fcfaf0');grd.addColorStop(.63,'#e1ebd5');grd.addColorStop(1,'#afcdae');g.fillStyle=grd;g.fillRect(0,0,w,h);
+ ellipse(g,200,209,260,50,'#bed8ae');ellipse(g,200,211,225,35,'#dce7bc');
+ // Views are orthographic by design: distance along the viewing ray is hidden.
+ // A west/east view reveals only the row; a north/south view only the column.
+ const floor=192;
+ const things=objects.filter(o=>o.type!=='flower').map(o=>({...o,u:screenU(info.dir,o.x,o.z),d:depth(info.dir,o.x,o.z)}));
+ const s=spots[levels[stage].fox];things.push({type:'fox',x:s.x,z:s.z,u:screenU(info.dir,s.x,s.z),d:depth(info.dir,s.x,s.z),scale:1});
+ things.sort((a,b)=>a.d-b.d);
+ for(const o of things){const y=floor; if(o.type==='tree')tree(g,o.u,y,o.scale*.75);if(o.type==='stone')rock(g,o.u,y,o.scale*.8);if(o.type==='bush')shrub(g,o.u,y,o.scale*.85);if(o.type==='fox')foxy(g,o.u,y,1.2,true)}
+ // Foreground edge: subtle fairytale meadow.
+ ellipse(g,200,240,310,29,'#91b69055');
+ g.textAlign='left';g.font='700 9px ui-sans-serif,system-ui';g.fillStyle='#638e80aa';g.fillText('WHAT I SAW',14,18);
+ g.restore();}
+function updateCards(){cards.innerHTML='';for(const key of levels[stage].w){const p=P[key],b=document.createElement('button');b.className='wcard';b.type='button';b.setAttribute('aria-label',p.name+'の見た景色を拡大');b.innerHTML=`<div class="card-header"><span class="animal ${p.cl}">${p.emoji}</span><div><div class="animal-name">${p.name}<span class="animal-note">${p.camera}</span></div></div></div><canvas class="photo" width="800" height="460"></canvas><div class="card-caption"><span>見えた景色</span><span class="zoom">↗</span></div>`;cards.append(b);const cv=b.querySelector('canvas');animalRender(cv,key);b.addEventListener('click',()=>{tone('open');modalKey=key;modalTitle.textContent=p.emoji+'　'+p.name+'が見た景色';modalDesc.textContent=p.camera+'。キツネがどの位置に重なって見えるか、森の正面図と比べよう。';animalRender(modalCanvas,key,true);modal.hidden=false})}}
+function notify(message,sub='',ms=1500){clearTimeout(tHandle);toast.innerHTML=message+(sub?`<span class="sub">${sub}</span>`:'');toast.classList.add('on');tHandle=setTimeout(()=>toast.classList.remove('on'),ms)}
+function reset(){done=false;wrongSpot=-1;objects=terrain(levels[stage].seed);document.querySelector('#stage').textContent=String(stage+1).padStart(2,'0')+' / '+String(levels.length).padStart(2,'0');document.querySelector('#next').hidden=true;document.querySelector('#help').hidden=false;document.querySelector('#headline').textContent='キツネはどこにいる？';document.querySelector('#desc').textContent='ふたりが見た景色を合わせて、隠れ家をタップしよう。';document.querySelector('#scene-message').textContent='６つの茂みの、どこかに隠れている';updateCards();mainScene()}
+C.addEventListener('click',e=>{if(done)return;const r=C.getBoundingClientRect(),x=(e.clientX-r.left)*400/r.width,y=(e.clientY-r.top)*408/r.height;const found=spots.map(s=>{const p=projection(s.x,s.z);return {id:s.id,dist:Math.hypot(x-p.x,y-(p.y+3))}}).sort((a,b)=>a.dist-b.dist)[0];if(!found||found.dist>40)return;const id=found.id;
+ if(id===levels[stage].fox){done=true;wrongSpot=-1;tone('win');document.querySelector('#headline').textContent='見つけた！';document.querySelector('#desc').textContent='違う角度から見た景色が、ひとつにつながった。';document.querySelector('#scene-message').textContent='視点が違っても、キツネは同じところにいる';document.querySelector('#next').hidden=false;document.querySelector('#help').hidden=true;notify('見つけた！ ✦','ふたつの視点を重ねると、この場所に決まる。',2400)}else{wrongSpot=id;tone('no');notify('ちがうみたい…','もう一度、ふたりの写真を見比べてみよう。',1500);setTimeout(()=>{if(!done){wrongSpot=-1;mainScene()}},650)}mainScene()});
+document.querySelector('#help').addEventListener('click',()=>{tone('open');notify('１枚では、奥行きがわからない。','反対方向から見た写真と組み合わせると、位置が決まる。',3200)});
+document.querySelector('#next').addEventListener('click',()=>{tone('next');stage=(stage+1)%levels.length;reset();window.scrollTo({top:0,behavior:'smooth'})});document.querySelector('#close').addEventListener('click',()=>{modal.hidden=true});modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true});window.addEventListener('keydown',e=>{if(e.key==='Escape')modal.hidden=true});
+// Soft, consonant wood/ceramic sounds. Avoid pitched sweeps, noise, and dissonant overlap.
+function tone(kind){if(muted)return;try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const t=audio.currentTime;const notes={open:[[392,0,.07]],no:[[220,0,.075]],next:[[392,0,.065],[523,.065,.1]],win:[[392,0,.11],[494,.115,.12],[587,.235,.13],[784,.37,.23]]}[kind]||[[392,0,.08]];for(const [freq,del,dur] of notes){const osc=audio.createOscillator(),gain=audio.createGain(),lp=audio.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1300;osc.type='sine';osc.frequency.setValueAtTime(freq,t+del);gain.gain.setValueAtTime(.0001,t+del);gain.gain.exponentialRampToValueAtTime(kind==='win'?.072:.044,t+del+.014);gain.gain.exponentialRampToValueAtTime(.0001,t+del+dur);osc.connect(lp).connect(gain).connect(audio.destination);osc.start(t+del);osc.stop(t+del+dur+.025)}}catch(e){}}
+document.querySelector('#sound').addEventListener('click',()=>{muted=!muted;document.querySelector('#sound').textContent=muted?'♩':'♫';if(!muted)tone('open')});
+reset();
+// Local-only logic verification (no solution disclosed in UI): each pair of orthogonal views determines one of six spots.
+window.__sightlinesTest={levels,spots,P,screenU,verify:()=>levels.every(l=>{const [a,b]=l.w.map(w=>P[w].dir),s=spots[l.fox],u1=screenU(a,s.x,s.z),u2=screenU(b,s.x,s.z);return spots.filter(p=>Math.abs(screenU(a,p.x,p.z)-u1)<.001&&Math.abs(screenU(b,p.x,p.z)-u2)<.001).length===1})};
+})();
+</script>
+</body>
+</html>
