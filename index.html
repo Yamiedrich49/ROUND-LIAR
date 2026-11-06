@@ -1,112 +1,207 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><meta name="theme-color" content="#F7F8F6"/><title>円卓の嘘 — はじめての推理</title>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F6F1">
+<title>円卓の嘘 · FOREST v5</title>
 <style>
-:root{--ink:#203540;--muted:#74838A;--border:#E0E8E7;--teal:#177F83;--tealLight:#E6F4F1;--red:#CA6D58;--orange:#B96D22;--bg:#F7F8F6;--white:#fff;--shadow:0 8px 28px rgba(25,65,67,.045)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;-webkit-font-smoothing:antialiased}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #64B3AE;outline-offset:3px}button:disabled{opacity:.45;cursor:default}.app{max-width:460px;min-height:100dvh;margin:auto;padding:17px 14px calc(28px + env(safe-area-inset-bottom))}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.brand{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:900;letter-spacing:.10em}.mark{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:2px solid var(--teal);color:var(--teal);font-size:17px}.control{display:flex;gap:7px}.iconBtn{min-height:32px;padding:0 10px;border:1px solid var(--border);border-radius:10px;background:white;color:var(--muted);font-weight:800;font-size:12px}.label{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--teal);font-weight:900;font-size:10px;letter-spacing:.13em}.headline{text-align:center;margin-bottom:11px}.headline h1{font-size:24px;letter-spacing:.02em;margin:5px 0 6px}.subhead{color:var(--muted);font-size:12px;margin:0;line-height:1.6}.progress{display:flex;gap:6px;margin:14px 0 14px}.progress .bit{height:4px;border-radius:5px;background:#E1E8E5;flex:1}.progress .bit.done{background:#4BAAA1}.progress .bit.current{background:#1D7E7D}.message{background:white;border-radius:16px;border:1px solid var(--border);padding:13px 15px;margin-bottom:10px;box-shadow:var(--shadow)}.askQuestion{font-size:13px;font-weight:800;text-align:center;line-height:1.6}.questionHelp{color:var(--muted);font-size:11px;text-align:center;margin-top:4px}.tableWrap{background:white;border:1px solid var(--border);border-radius:22px;padding:9px 8px 13px;box-shadow:var(--shadow)}.board{position:relative;width:100%;aspect-ratio:1.03;max-height:395px;margin:auto;touch-action:manipulation}.tableSurface{position:absolute;width:60%;height:60%;left:20%;top:20%;border-radius:50%;background:radial-gradient(circle at 38% 33%,#F7FBF7,#E8F0EB);border:1px solid #D9E5DF;box-shadow:inset 0 0 0 6px white,inset 0 0 0 7px #E4EBE7;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:5px;pointer-events:none}.tableIcon{font-size:23px;color:#A2BEB6}.tableCenter{font-size:12px;color:#67827B;font-weight:900;letter-spacing:.03em}.tableSmall{font-size:10px;color:#99A8A3;font-weight:700}.person{position:absolute;transform:translate(-50%,-50%);height:90px;width:72px;background:transparent;border:0;border-radius:15px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.seat{font-size:10px;line-height:12px;color:#99A6A7;font-weight:800}.avatar{width:49px;height:49px;flex:0 0 49px;display:flex;justify-content:center;align-items:center;font-size:21px;font-weight:900;color:white;border:3px solid white;border-radius:50%;box-shadow:0 4px 10px rgba(33,71,70,.13);position:relative;transition:transform .16s}.person:active .avatar{transform:scale(.91)}.person.current .avatar:after{content:"";position:absolute;inset:-7px;border:2px solid #1D9A95;border-radius:50%;box-shadow:0 0 0 3px #DAF2EE;animation:pulse 1.5s infinite}.person.picked .avatar:after{content:"";position:absolute;inset:-7px;border:2px solid #C66F52;border-radius:50%;box-shadow:0 0 0 3px #F8E8DF}.speech{line-height:18px;min-width:52px;padding:1px 7px;font-weight:850;border-radius:8px;font-size:11px;text-align:center;color:#B4C1BC;background:#F1F3F2;border:1px solid #EDF1EF}.speech.yes{color:#117C67;border-color:#CBE9DF;background:#E1F4ED}.speech.no{color:#596A76;border-color:#DAE1E7;background:#EDF0F3}.speech.changed{outline:2px solid #E2AA5F;outline-offset:1px}.person.dim{opacity:.7}.person:disabled{cursor:default}.boardFoot{font-size:11px;color:#93A19C;text-align:center;min-height:18px;margin-top:1px}.panel{background:white;border:1px solid var(--border);border-radius:17px;box-shadow:var(--shadow);padding:16px;margin-top:11px}.panelTitle{font-size:17px;font-weight:900;margin:0 0 6px}.panelBody{font-size:12px;line-height:1.75;color:#687A7D;margin:0 0 10px}.panelBody b{color:#354D50}.questionRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:11px 0}.quote{padding:10px 9px;border:1px solid #E3EAE6;border-radius:11px;background:#F8FAF8;text-align:center}.quote .who{font-size:11px;color:#83928E;font-weight:750}.quote .val{font-size:20px;font-weight:900;letter-spacing:.02em;margin-top:5px}.quote .val.yes{color:#138775}.quote .val.no{color:#586B79}.quote .val.hidden{color:#B3BDBA}.quote .prior{font-size:11px;color:#7F8E89;margin-top:5px}.tinyline{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:#84938D;margin:10px 0}.smallPill{font-size:11px;background:#EDF5F1;color:#36857A;border-radius:50px;padding:5px 10px;font-weight:800}.action{width:100%;min-height:46px;border:0;border-radius:12px;background:var(--teal);font-weight:900;font-size:14px;color:white;padding:10px}.action.subtle{background:#EAF4F1;color:#1C726E}.action.outline{background:white;border:1px solid var(--border);color:#517A77}.btnRow{display:flex;gap:8px}.btnRow>*{flex:1;min-width:0}.ghost{background:transparent;border:none;color:var(--teal);font-size:12px;font-weight:800;padding:11px 5px}.hint{padding:11px 12px;border-radius:11px;background:#F1F7F4;border:1px solid #DDEBE5;color:#426F65;font-size:12px;line-height:1.75;margin-top:8px}.feedback{background:#F4F8F6;border:1px solid #DFEAE6;border-radius:12px;padding:11px;margin:11px 0;color:#55736A;line-height:1.7;font-size:12px}.feedback.warn{background:#FFF9EB;border-color:#F2E6CB;color:#946A24}.feedback.bad{background:#FFF1EB;border-color:#F2D8CC;color:#9A604E}.feedback.good{background:#EAF7F0;color:#2D7863;border-color:#D2EBDC}.kicker{font-size:11px;color:#94A19D;font-weight:850;letter-spacing:.05em}.answerTable{width:100%;border-collapse:collapse;margin:10px 0;font-size:12px}.answerTable td,.answerTable th{padding:9px 7px;border-bottom:1px solid #E6ECE9;text-align:center}.answerTable th{color:#788B85;font-weight:800}.answerTable td.y{color:#0E8669;font-weight:900}.answerTable td.n{color:#667987;font-weight:900}.answerTable tr.actual{background:#EDF8F2}.note{color:#9BA9A4;font-size:11px;text-align:center;line-height:1.7;margin:13px auto}.modalBg{position:fixed;inset:0;background:rgba(24,46,49,.42);z-index:5;display:flex;justify-content:center;align-items:center;padding:18px}.modal{max-width:400px;width:100%;background:white;border-radius:22px;padding:22px;box-shadow:0 20px 70px rgba(0,0,0,.17)}.modal h2{margin:0 0 9px;font-size:20px}.modal p{font-size:13px;line-height:1.85;color:#607472}.modal p strong{color:#294C4B}.hidden{display:none!important}@keyframes pulse{50%{box-shadow:0 0 0 5px #DAF0E9}}@media(max-width:350px){.app{padding:13px 9px 28px}.tableWrap{padding:7px 3px 11px}.person{width:65px;height:84px}.avatar{width:44px;height:44px;flex-basis:44px;font-size:19px}.speech{min-width:44px}}@media(prefers-reduced-motion:reduce){*,*:after{animation:none!important;transition:none!important}}
-</style></head><body>
-<main class="app">
-<div class="topbar"><div class="brand"><span class="mark">?</span> ROUND TABLE <span style="color:#9FAFAC;font-size:10px">/ BEGINNER</span></div><div class="control"><button class="iconBtn" id="reset" aria-label="最初から">↺</button><button class="iconBtn" id="help" aria-label="遊び方">ルール</button></div></div>
-<div class="headline"><div class="label" id="stageLabel">CASE 01 / 03 · はじめての推理</div><h1>円卓の嘘</h1><p class="subhead">話を聞く → 席を変える → もう一度聞く</p></div>
-<div class="progress" id="progress"><span class="bit current"></span><span class="bit"></span><span class="bit"></span></div>
-<div class="message"><div class="askQuestion">「両どなりに、うそつきは1人いますか？」</div><div class="questionHelp">しょうじき者は本当を、うそつきは反対を答える。</div></div>
-<section class="tableWrap"><div class="board" id="board"><div class="tableSurface"><div class="tableIcon">◇</div><div class="tableCenter">うそつきは1人</div><div class="tableSmall" id="tableSub">だれだろう？</div></div></div><div class="boardFoot" id="boardFoot">光っている人をタップして話を聞こう</div></section>
-<section class="panel" id="panel" aria-live="polite"></section>
-<p class="note">人物の番号は人についた名前です。<br/>席を変えても、その人の正体は変わりません。</p>
-</main>
-<div class="modalBg hidden" id="modalBg" role="dialog" aria-modal="true"><div class="modal"><h2>あそびかた</h2><p><strong>うそつきは1人。</strong>みんなに同じ質問をすると、しょうじき者は本当を、うそつきは反対を言います。</p><p>① 光っている人をタップして、<strong>1人ずつ</strong>答えを聞きます。<br/>② 怪しい人を見つけるために、<strong>2人の席を交換</strong>します。<br/>③ <strong>同じ人</strong>にもう一度聞いて、答えの変化を観察します。<br/>④ うそつきだと思う人をタップして当てます。</p><p>1人だけうそつきなら、<strong>うそつき本人と、その両どなりの3人</strong>が YES と答えます。まずは、この法則を体験してみよう。</p><button class="action" id="closeHelp">もどる</button></div></div>
+:root{--bg:#f7f6f1;--paper:#fffcf5;--ink:#273c36;--ink2:#52736a;--quiet:#94a79c;--jade:#2e8c77;--jadeDeep:#1e6e61;--jadePale:#dcefe7;--ash:#e0e6df;--rust:#b77662;--rustPale:#f3e1d9;--gold:#c3a16b;--shadow:rgba(45,89,65,.095)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;width:100%;height:100%;background:var(--bg);color:var(--ink)}
+body{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;-webkit-user-select:none;user-select:none}
+button:focus-visible{outline:2px solid var(--jade);outline-offset:4px}
+button:disabled{opacity:.36;cursor:not-allowed}
+.app{min-height:100dvh;max-width:520px;margin:auto;display:flex;flex-direction:column;isolation:isolate;overflow:hidden;position:relative;padding:calc(9px + env(safe-area-inset-top)) 12px calc(9px + env(safe-area-inset-bottom));background:radial-gradient(ellipse at 49% 54%,#fffefa 0,#f7f6f1 79%)}
+.header{display:flex;align-items:center;justify-content:space-between;min-height:44px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Yu Mincho","Hiragino Mincho ProN",Georgia,serif;font-weight:750;font-size:18px;letter-spacing:.075em;white-space:nowrap}
+.brand-mark{width:29px;height:29px;display:grid;place-items:center;border:1px solid #9eb7aa;border-radius:50%;color:#3e8676;font-family:Georgia,serif;font-size:16px}
+.header-actions{display:flex;align-items:center;gap:5px}
+.case-count{font:600 10px/1 Georgia,serif;color:#8aa095;white-space:nowrap;letter-spacing:.08em;margin-right:6px}
+.icon-button{display:grid;place-items:center;width:40px;height:40px;color:#678c7c;border-radius:50%;background:transparent;touch-action:manipulation}
+.icon-button svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.icon-button:active{background:#e3eee7}
+.subtitle{text-align:center;min-height:54px;padding-top:4px}
+.subtitle .tiny{font:700 9px/1.4 Georgia,serif;letter-spacing:.21em;color:#99aa9c}
+.subtitle .intent{font-size:13px;line-height:1.6;color:#668678;font-weight:700;letter-spacing:.055em;margin-top:7px}
+.subtitle .intent b{color:var(--rust);font-weight:850}
+.progress{display:flex;justify-content:center;gap:7px;margin:1px 0 0;min-height:9px}
+.progress span{height:3px;width:24px;background:#e0e8df;border-radius:4px;transition:background .3s}
+.progress span.passed{background:#b4d4c3}.progress span.now{background:#2a937c}
+.board-zone{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;width:100%;position:relative}
+.board{position:relative;flex:none;width:min(calc(100vw + 14px),480px,calc(100dvh - 251px));height:min(calc(100vw + 14px),480px,calc(100dvh - 251px));max-width:100%;min-width:0;aspect-ratio:1;touch-action:pan-y;overflow:visible}
+.board-ring{position:absolute;inset:16.4%;border-radius:50%;background:radial-gradient(circle at 31% 25%,#fffefa,#f0f5ee 65%,#e6eee5);border:1.5px solid #d6e3d8;box-shadow:0 10px 28px var(--shadow),0 0 0 7px #fafbf5,inset 0 0 0 8px #f4f8f1,inset 0 0 0 9px #dbe7dc}
+.board-ring:before{content:"";position:absolute;inset:19px;border:1px solid #dce7db;border-radius:50%;opacity:.8}
+.board-ring:after{content:"";position:absolute;inset:29px;border:1px dashed #d6e3d9;border-radius:50%;opacity:.6}
+.links{position:absolute;inset:0;overflow:visible;width:100%;height:100%;pointer-events:none;z-index:2}
+.links path{stroke:#5ba892;stroke-width:1.8;stroke-dasharray:4 6;stroke-linecap:round;fill:none;opacity:.75;animation:draw .32s ease both}
+.links .preview{stroke:#b9a276;stroke-dasharray:3 6;opacity:.64}
+@keyframes draw{from{opacity:0;stroke-dashoffset:14}to{opacity:.75;stroke-dashoffset:0}}
+.core{position:absolute;left:31%;top:35%;width:38%;height:30%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;pointer-events:none;z-index:3}
+.core-label{font:800 9px Georgia,serif;letter-spacing:.16em;color:#8cac9d}
+.core-main{font-family:Georgia,"Yu Mincho",serif;font-weight:650;font-size:clamp(16px,4.8vw,23px);letter-spacing:.04em;line-height:1.45;color:#346b5b;margin-top:7px;white-space:nowrap}
+.core-sub{font-size:10px;color:#93a99c;margin-top:5px;line-height:1.65;max-width:100%}
+.seat{position:absolute;left:var(--x);top:var(--y);width:76px;height:88px;transform:translate(-50%,-50%);z-index:8;display:flex;justify-content:center;align-items:flex-start;touch-action:none}
+.animal{width:76px;height:72px;display:flex;justify-content:center;align-items:center;padding:0;background:transparent;border:0;touch-action:none;position:relative;cursor:grab}
+.animal:active{cursor:grabbing}
+.portrait{width:67px;height:67px;display:block;position:relative;border-radius:50%;background:#e7eee8;border:3px solid #fffdfa;box-shadow:0 5px 13px #44675019,0 1px 3px #3853440a;transform-origin:50% 50%;transition:transform .16s cubic-bezier(.2,.8,.2,1),box-shadow .2s,filter .2s,opacity .15s}
+.portrait svg{width:100%;height:100%;display:block}
+.animal.ready .portrait{box-shadow:0 0 0 2px #369b84,0 0 0 7px #dbf0e7,0 7px 18px #358d7733;animation:ready 2.2s ease-in-out infinite}
+@keyframes ready{50%{box-shadow:0 0 0 2px #369b84,0 0 0 9px #dfefe5,0 8px 18px #358d7729}}
+.animal.near .portrait{box-shadow:0 0 0 2px #a2ceba,0 3px 14px #537e6522}
+.animal.picked .portrait{transform:translateY(-8px) scale(1.09);box-shadow:0 0 0 3px var(--jade),0 0 0 8px #d8eee6,0 15px 26px #286b5540}
+.animal.drop .portrait{transform:scale(1.1);box-shadow:0 0 0 2.5px #bc9b61,0 0 0 10px #f1e8d5}
+.animal.dim .portrait{opacity:.16}
+.animal.marked .portrait{box-shadow:0 0 0 2px var(--rust),0 0 0 7px var(--rustPale)}
+.animal.liar .portrait{box-shadow:0 0 0 3px var(--rust),0 0 0 9px var(--rustPale)}
+.animal.safe .portrait{box-shadow:0 0 0 2px #72b29d,0 0 0 6px #e2f1e8}
+.memo{position:absolute;width:37px;height:38px;right:-8px;top:-11px;z-index:11;display:flex;justify-content:center;align-items:center;padding:0;touch-action:manipulation}
+.memo .dot{width:8px;height:8px;border-radius:50%;background:#cddbd0;border:1px solid #fff9ec;transition:all .16s;box-shadow:0 1px 4px #425b4610}
+.memo.active .dot{width:25px;height:25px;background:#b8735e;color:white;display:grid;place-items:center;font-size:14px;font-weight:900;box-shadow:0 4px 11px #a06b564d;transform:rotate(-9deg)}
+.memo.in-answer .dot{width:20px;height:20px;background:#f3f1e9;border:1px solid #c8d6cb;display:grid;place-items:center;color:#87a598;font-size:13px}
+.memo.in-answer.active .dot{background:var(--rust);color:white;border-color:var(--rust)}
+.bubble{position:absolute;z-index:10;top:75px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;min-height:24px;min-width:49px;border-radius:12px;padding:3px 7px 4px;background:#f0f3ef;border:1px solid #c9d8cd;color:#426f60;font:700 13px/1 Georgia,serif;letter-spacing:.025em;white-space:nowrap;pointer-events:none;box-shadow:0 3px 9px #2b53400b;animation:bubbleIn .19s ease both}
+.bubble.yes{color:#166e5b;background:#daf0e4;border-color:#add7bd}
+.bubble.changed{background:#f6e4c5;border-color:#ddb779;color:#77552b;min-width:92px}
+.bubble .old{color:#b3a28a;font-size:9px;text-decoration:line-through;margin-right:5px}
+.bubble .arrow{margin-right:5px;font-size:10px}
+.bubble.unasked{background:#fffdf7;color:#92a698;border:1px dashed #c5d7c7;min-width:27px}
+@keyframes bubbleIn{from{opacity:0;transform:translate(-50%,3px) scale(.89)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+.drag-follower{position:fixed;z-index:300;pointer-events:none;display:none;transform:translate(-50%,-50%);filter:drop-shadow(0 16px 12px #3a716233)}
+.drag-follower .portrait{width:79px;height:79px;box-shadow:0 12px 26px #39695a38}
+.flight{position:fixed;z-index:240;pointer-events:none;width:67px;height:67px}
+.flight .portrait{width:67px;height:67px}
+.dock{width:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;gap:7px;padding:0 8px 5px;min-height:132px}
+.dock .action-prompt{font-size:15px;font-weight:800;letter-spacing:.025em;color:#385c51;line-height:1.5;min-height:23px}
+.dock .guide{min-height:24px;font-size:11px;color:#8da196;line-height:1.65;max-width:95%}
+.dock .actions{display:flex;align-items:center;justify-content:center;gap:8px;min-height:45px;flex-wrap:wrap}
+.btn-primary{padding:12px 24px;min-width:193px;min-height:45px;border-radius:50px;background:#277f70;color:#fffdf5;font-size:13px;font-weight:750;box-shadow:0 7px 16px #277f7027;transition:transform .14s,box-shadow .14s}
+.btn-primary:active{transform:translateY(1px) scale(.98);box-shadow:0 3px 8px #277f7028}
+.btn-quiet{padding:10px 15px;min-height:40px;color:#598276;font-weight:750;font-size:12px;border-radius:28px}
+.btn-quiet:active{background:#e5eee7}
+.footer{text-align:center;font:650 9px Georgia,serif;letter-spacing:.17em;color:#b4c1b5;margin-top:3px}
+.veil{position:fixed;z-index:600;inset:0;display:flex;align-items:flex-end;justify-content:center;background:#172e2780;backdrop-filter:blur(5px);padding:14px 12px max(12px,env(safe-area-inset-bottom))}
+.veil[hidden]{display:none}
+.sheet{position:relative;max-width:480px;width:100%;max-height:84dvh;overflow:auto;background:#fffcf5;color:#365549;border-radius:24px 24px 19px 19px;padding:25px 23px 22px;box-shadow:0 14px 48px #193e3560;animation:slideUp .22s cubic-bezier(.2,.7,.2,1)}
+@keyframes slideUp{from{opacity:.5;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.sheet .line{width:33px;height:4px;background:#ceddd1;border-radius:5px;margin:-13px auto 20px}
+.sheet .eyebrow{font:700 10px Georgia,serif;letter-spacing:.18em;color:#9bac9b}
+.sheet h2{font-family:"Yu Mincho",Georgia,serif;font-size:21px;letter-spacing:.04em;margin:7px 0 15px}
+.sheet p{font-size:13px;line-height:1.95;color:#597568;margin:9px 0}
+.sheet strong{color:#286c5e}
+.sheet .footbtns{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:15px}
+.sheet .hypotheses{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.hypo{flex:1;border:1px solid #dce7dd;border-radius:14px;background:#f4f7ef;text-align:center;padding:10px 7px}
+.hypo .mini{display:flex;justify-content:center;gap:4px;margin-top:9px}
+.hypo .mini .portrait{width:42px;height:42px;border-width:2px}
+.hypo label{display:block;color:#8eaaa0;font:700 10px Georgia,serif;letter-spacing:.1em}
+.toast{position:fixed;z-index:650;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:calc(100vw - 35px);border-radius:40px;padding:10px 18px;background:#305f50;color:#fffef7;font-size:12px;box-shadow:0 7px 27px #1b493b33;white-space:nowrap;animation:bubbleIn .2s ease}
+.toast[hidden]{display:none}
+.sparkle{position:absolute;z-index:17;pointer-events:none;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:glow 1s ease forwards}
+@keyframes glow{to{opacity:0;transform:translate(var(--sx),var(--sy)) scale(.2)}}
+@media (max-height:700px){.app{padding-top:calc(5px + env(safe-area-inset-top));padding-bottom:calc(4px + env(safe-area-inset-bottom))}.subtitle{min-height:42px}.subtitle .intent{margin-top:3px}.dock{min-height:117px;gap:4px}.board{width:min(calc(100vw + 10px),455px,calc(100dvh - 230px));height:min(calc(100vw + 10px),455px,calc(100dvh - 230px))}}
+@media (max-height:610px){.subtitle{min-height:30px}.subtitle .tiny{display:none}.subtitle .intent{margin:0}.dock{min-height:105px}.progress{display:none}}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><div class="brand"><span class="brand-mark">∴</span><span>円卓の嘘</span></div><div class="header-actions"><span class="case-count" id="caseCount">01 / 04</span><button class="icon-button" id="soundBtn" aria-label="音を切る"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="wave" d="M17 9a4 4 0 0 1 0 6M20 6a8 8 0 0 1 0 12"/></svg></button><button class="icon-button" id="helpBtn" aria-label="遊び方"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.6-2.5 2-2.5 4.2"/><circle cx="12" cy="17" r=".7" fill="currentColor" stroke="none"/></svg></button></div></header>
+<div class="subtitle"><div class="tiny" id="chapter">THE FIRST QUESTION</div><div class="intent">この中に、<b>嘘つきが2匹。</b></div></div>
+<div class="progress" id="progress"><span></span><span></span><span></span><span></span></div>
+<div class="board-zone"><div class="board" id="board"><div class="board-ring"></div><svg class="links" id="links" viewBox="0 0 400 400" aria-hidden="true"></svg><div class="core" id="core" aria-live="polite"></div><div id="seats"></div></div></div>
+<div class="dock" aria-live="polite"><div class="action-prompt" id="prompt"></div><div class="guide" id="guide"></div><div class="actions" id="actions"></div><div class="footer">OBSERVE · MOVE · DISCOVER</div></div>
+</div>
+<div class="drag-follower" id="follower"></div><div class="veil" id="veil" hidden><div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="ガイド"></div></div><div id="toast" class="toast" hidden role="status"></div>
 <script>
 (()=>{'use strict';
-const $=s=>document.querySelector(s);
-const COLORS=['#6A9BB9','#D68A6F','#91A17A','#A48EB6','#D3AD6C','#6CA8A1'];
-const stages=[
- {label:'CASE 01 / 03 · はじめての推理',n:5,witnesses:[1,2],liar:2,coach:true},
- {label:'CASE 02 / 03 · もう少し考える',n:6,witnesses:[1,3],liar:6,coach:false},
- {label:'CASE 03 / 03 · ひとりで推理',n:6,witnesses:[2,4],liar:2,coach:false}
+const $=id=>document.getElementById(id);
+const cast=[{name:'ネズミ',kind:'mouse'},{name:'ウサギ',kind:'rabbit'},{name:'ライオン',kind:'lion'},{name:'ゾウ',kind:'elephant'},{name:'クマ',kind:'bear'},{name:'フクロウ',kind:'owl'}];
+const cases=[
+ {n:5,liars:[0,2],witness:[0,1,2],caption:'THE FIRST QUESTION'},
+ {n:5,liars:[2,4],witness:[0,1,2],caption:'A QUIETER MYSTERY'},
+ {n:6,liars:[0,1],witness:[0,1,2],caption:'SIX AT THE TABLE'},
+ {n:6,liars:[1,3],witness:[0,2,4],caption:'THE LAST TESTIMONY'}
 ];
-let index=0,S,order,phase,firstSeen,afterSeen,picked,candidates,swapLog,hintLevel,badGuess,selectedGuess,originalOrder,initialCandidates,afterCandidates,originalAnswers,finalSwap,attempts;
-function getAnswer(arr,liar,who){let i=arr.indexOf(who),a=arr[(i-1+arr.length)%arr.length],b=arr[(i+1)%arr.length];let trueValue=(a===liar)!==(b===liar);return trueValue !== (who===liar) ? 'YES':'NO';}
-function stateCandidates(){return [...Array(S.n)].map((_,i)=>i+1).filter(liar=>swapLog.every(row=>row.heard.every(([who,said])=>getAnswer(row.order,liar,who)===said)));}
-function reset(){S=stages[index];order=Array.from({length:S.n},(_,i)=>i+1);originalOrder=order.slice();phase='listen';firstSeen=[];afterSeen=[];picked=[];swapLog=[];hintLevel=0;badGuess='';selectedGuess=null;attempts=0;candidates=order.slice();initialCandidates=[];afterCandidates=[];originalAnswers=[];finalSwap=null;draw();}
-function phaseStep(){return phase==='listen'?0:phase==='chooseSwap'||phase==='listenAgain'||phase==='retrySwap'?1:2;}
-function nextPerson(){const seen=phase==='listen'?firstSeen:afterSeen;return S.witnesses[seen.length];}
-function onPerson(who){
- if(phase==='listen'){
-  if(who!==nextPerson())return;
-  const answer=getAnswer(order,S.liar,who);firstSeen.push([who,answer]);
-  if(firstSeen.length===S.witnesses.length){swapLog=[{order:order.slice(),heard:firstSeen.slice()}];originalAnswers=firstSeen.slice();initialCandidates=stateCandidates();phase='chooseSwap';}
- }else if(phase==='listenAgain'){
-  if(who!==nextPerson())return;
-  const answer=getAnswer(order,S.liar,who);afterSeen.push([who,answer]);
-  if(afterSeen.length===S.witnesses.length){swapLog.push({order:order.slice(),heard:afterSeen.slice()});afterCandidates=stateCandidates();phase=afterCandidates.length===1?'guess':'retrySwap';}
- }else if(phase==='chooseSwap'){
-  if(picked.includes(who)){picked=picked.filter(x=>x!==who)}
-  else picked.push(who);
-  if(picked.length===2){const [a,b]=picked;let i=order.indexOf(a),j=order.indexOf(b);[order[i],order[j]]=[order[j],order[i]];finalSwap=[a,b];attempts++;picked=[];afterSeen=[];phase='listenAgain';}
- }else if(phase==='guess'){
-  selectedGuess=selectedGuess===who?null:who;
-  badGuess='';
- }
- draw();
+let stage=0,st,initial,order,phase,first,second,marks,selected,focus,lastSwap,locked=false,guideLevel=0,toastTimer=null,muted=false,ctx=null,pointer=null,holdTimer=null,ignoreClick=0,dragTarget=null;
+const pairs=n=>{let a=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)a.push([i,j]);return a};
+const name=id=>cast[id].name;
+const same=(a,b)=>a.length===b.length&&a.every(x=>b.includes(x));
+function answer(arr,liars,id){const k=arr.indexOf(id),n=arr.length;const a=arr[(k+n-1)%n],b=arr[(k+1)%n];return ((liars.includes(a)!==liars.includes(b))!==liars.includes(id))?'YES':'NO'}
+const heard=(arr,id)=>arr.find(x=>x.id===id);
+const beforeCandidates=()=>pairs(st.n).filter(p=>first.every(x=>answer(initial,p,x.id)===x.word));
+const remaining=()=>beforeCandidates().filter(p=>second.every(x=>answer(order,p,x.id)===x.word));
+const place=idx=>{const r=(-90+idx*360/st.n)*Math.PI/180;return {x:50+35*Math.cos(r),y:49+35*Math.sin(r)}};
+const neighbors=id=>{let k=order.indexOf(id);return [order[(k+st.n-1)%st.n],order[(k+1)%st.n]]};
+const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function avatar(id){
+ const E='<ellipse cx="31" cy="48" rx="2.2" ry="2.7" fill="#3c4d48"/><ellipse cx="49" cy="48" rx="2.2" ry="2.7" fill="#3c4d48"/>';
+ const marks={
+ mouse:`<circle cx="19" cy="25" r="14" fill="#929EA4"/><circle cx="61" cy="25" r="14" fill="#929EA4"/><circle cx="19" cy="25" r="8.5" fill="#DEB8BA"/><circle cx="61" cy="25" r="8.5" fill="#DEB8BA"/><ellipse cx="40" cy="46" rx="27" ry="25" fill="#A5B2B7"/>${E}<ellipse cx="40" cy="59" rx="8" ry="6" fill="#C5CCD0"/><path d="M37 56q3-3 6 0q-3 5-6 0" fill="#9B6869"/><path d="M22 57l-12-3M22 61l-12 2M58 57l12-3M58 61l12 2" stroke="#7D9095" stroke-width="1.25" stroke-linecap="round"/>`,
+ rabbit:`<ellipse cx="27" cy="23" rx="11" ry="23" fill="#F4E9DD" transform="rotate(-12 27 23)"/><ellipse cx="53" cy="23" rx="11" ry="23" fill="#F4E9DD" transform="rotate(12 53 23)"/><ellipse cx="27" cy="23" rx="5" ry="17" fill="#D9B3AF" transform="rotate(-12 27 23)"/><ellipse cx="53" cy="23" rx="5" ry="17" fill="#D9B3AF" transform="rotate(12 53 23)"/><ellipse cx="40" cy="48" rx="27" ry="25" fill="#F5ECE1"/><ellipse cx="31" cy="48" rx="2.2" ry="2.7" fill="#635A55"/><ellipse cx="49" cy="48" rx="2.2" ry="2.7" fill="#635A55"/><path d="M37 57l3 3 3-3q-3-3-6 0" fill="#C18F84"/><path d="M40 60v4m-5 1q5 3 10 0" fill="none" stroke="#9B8E83" stroke-width="1.35" stroke-linecap="round"/>`,
+ lion:`<g fill="#BA9254"><circle cx="40" cy="14" r="14"/><circle cx="59" cy="21" r="15"/><circle cx="67" cy="40" r="15"/><circle cx="58" cy="58" r="16"/><circle cx="40" cy="65" r="15"/><circle cx="22" cy="58" r="16"/><circle cx="13" cy="40" r="15"/><circle cx="21" cy="21" r="15"/></g><circle cx="22" cy="30" r="8" fill="#DBB776"/><circle cx="58" cy="30" r="8" fill="#DBB776"/><ellipse cx="40" cy="43" rx="24" ry="25" fill="#E9C787"/><ellipse cx="31" cy="43" rx="2.1" ry="2.6" fill="#5A4937"/><ellipse cx="49" cy="43" rx="2.1" ry="2.6" fill="#5A4937"/><ellipse cx="34.5" cy="57" rx="10" ry="8" fill="#F2DCA9"/><ellipse cx="45.5" cy="57" rx="10" ry="8" fill="#F2DCA9"/><path d="M35 52q5-3 10 0l-5 5z" fill="#8B6652"/><path d="M40 57v4m-4 1q4 3 8 0" fill="none" stroke="#8B6652" stroke-width="1.1"/>`,
+ elephant:`<ellipse cx="17" cy="43" rx="17" ry="23" fill="#8DA7AD"/><ellipse cx="63" cy="43" rx="17" ry="23" fill="#8DA7AD"/><ellipse cx="17" cy="43" rx="10.5" ry="15.5" fill="#B4C7C9"/><ellipse cx="63" cy="43" rx="10.5" ry="15.5" fill="#B4C7C9"/><ellipse cx="40" cy="43" rx="26" ry="26" fill="#A3BCC2"/><ellipse cx="31" cy="44" rx="2.2" ry="2.7" fill="#4A6066"/><ellipse cx="49" cy="44" rx="2.2" ry="2.7" fill="#4A6066"/><path d="M35 52q0 12 3 17q5 7 11 0" fill="none" stroke="#A3BCC2" stroke-width="12" stroke-linecap="round"/><path d="M35 52q0 12 3 17q5 7 11 0" fill="none" stroke="#7C9FA6" stroke-width="1.4" stroke-linecap="round"/><path d="M35 58h9M37 64h10" stroke="#78949A" stroke-width="1.2" stroke-linecap="round"/>`,
+ bear:`<circle cx="20" cy="24" r="11" fill="#A98671"/><circle cx="60" cy="24" r="11" fill="#A98671"/><circle cx="20" cy="24" r="5.5" fill="#C8A892"/><circle cx="60" cy="24" r="5.5" fill="#C8A892"/><ellipse cx="40" cy="44" rx="28" ry="27" fill="#B89882"/><ellipse cx="31" cy="43" rx="2.1" ry="2.6" fill="#4A3C36"/><ellipse cx="49" cy="43" rx="2.1" ry="2.6" fill="#4A3C36"/><ellipse cx="40" cy="55" rx="14.5" ry="11" fill="#E9CFB3"/><path d="M35 50q5-4 10 0q-1 6-5 6t-5-6" fill="#695348"/><path d="M40 56v4m-4 0q4 3 8 0" fill="none" stroke="#7A6457" stroke-width="1.2" stroke-linecap="round"/>`,
+ owl:`<path d="M14 28L12 9l20 12Q40 18 48 21L68 9l-2 19Q71 41 65 59Q57 72 40 72Q23 72 15 59Q9 41 14 28" fill="#93998A"/><path d="M18 28Q28 20 40 34Q52 20 62 28L60 54Q50 67 40 64Q30 67 20 54Z" fill="#AAAFA1"/><ellipse cx="29" cy="42" rx="13" ry="15" fill="#E8E6D2"/><ellipse cx="51" cy="42" rx="13" ry="15" fill="#E8E6D2"/><circle cx="30" cy="42" r="4" fill="#48564F"/><circle cx="50" cy="42" r="4" fill="#48564F"/><path d="M36 53l4 8 4-8z" fill="#BF9369"/><path d="M23 63l5 3 4-3m16 0 5 3 4-3" fill="none" stroke="#778574" stroke-width="1.4" stroke-linecap="round"/>`
+ };
+ let kind=cast[id].kind;
+ return `<span class="portrait"><svg viewBox="0 0 80 80" aria-hidden="true"><ellipse cx="40" cy="73" rx="24" ry="3" fill="#41584e" opacity=".10"/>${marks[kind]}</svg></span>`;
 }
-function board(){let html='';const n=S.n;const known=phase==='listen'?firstSeen:phase==='listenAgain'?afterSeen:phase==='chooseSwap'?firstSeen:phase==='retrySwap'||phase==='guess'||phase==='won'?afterSeen:[];
- order.forEach((who,seat)=>{
-  // Keep generous room on small vertical screens. n=5 and n=6 share the same circle.
-  const angle=(-90+360*seat/n)*Math.PI/180;
-  const x=50+37.0*Math.cos(angle),y=50+37.6*Math.sin(angle);
-  let isCurrent=(phase==='listen'||phase==='listenAgain')&&nextPerson()===who;
-  let selected=(phase==='chooseSwap'&&picked.includes(who))||(phase==='guess'&&selectedGuess===who);
-  let answer=known.find(v=>v[0]===who)?.[1];
-  let before=firstSeen.find(v=>v[0]===who)?.[1];
-  let changed=phase!=='listen'&&phase!=='chooseSwap'&&answer&&before&&answer!==before;
-  let enabled=isCurrent||phase==='chooseSwap'||phase==='guess';
-  html+=`<button type="button" class="person${isCurrent?' current':''}${selected?' picked':''}${!enabled&&phase!=='won'?' dim':''}" style="left:${x}%;top:${y}%" data-id="${who}" ${enabled?'':'disabled'} aria-label="${who}番の人${answer?'、発言'+answer:''}">
-  <span class="seat">席 ${seat+1}</span><span class="avatar" style="background:${COLORS[who-1]}">${who}</span><span class="speech${answer?' '+answer.toLowerCase():''}${changed?' changed':''}">${answer||'···'}</span></button>`;
- });
- // Avoid destroying live table center.
- const target=$('#board');target.querySelectorAll('.person').forEach(el=>el.remove());target.insertAdjacentHTML('beforeend',html);
- target.querySelectorAll('.person').forEach(b=>b.onclick=()=>onPerson(Number(b.dataset.id)));
- $('#tableSub').textContent=phase==='listen'?'まずは聞こう':phase==='chooseSwap'?'どこを動かす？':phase==='listenAgain'?'同じ人に聞く':phase==='retrySwap'?'別の実験を':phase==='guess'?'正体を指摘':'お見事！';
- $('#boardFoot').textContent=phase==='listen'||phase==='listenAgain'?`次は ${nextPerson()} 番の人をタップ`:
- phase==='chooseSwap'?'交換したい2人をタップ':phase==='retrySwap'?'まだどちらとも言えない。席を戻して試そう':phase==='guess'?'うそつきだと思う人を1人タップ':'';
+function reset(){st=cases[stage];initial=Array.from({length:st.n},(_,i)=>i);order=[...initial];phase='listen';first=[];second=[];marks=new Set();selected=null;focus=null;lastSwap=null;guideLevel=0;locked=false;closeSheet();render()}
+function stagePart(){return phase==='listen'?0:phase==='experiment'?1:(phase==='reask'||phase==='retry')?2:3}
+function audioEvent(type){if(muted)return;try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();let t=ctx.currentTime;const click=(freq,offset=0,len=.048,vol=.021)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(freq,t+offset);osc.frequency.exponentialRampToValueAtTime(Math.max(85,freq*.6),t+offset+len);g.gain.setValueAtTime(.0001,t+offset);g.gain.exponentialRampToValueAtTime(vol,t+offset+.004);g.gain.exponentialRampToValueAtTime(.0001,t+offset+len);osc.connect(g).connect(ctx.destination);osc.start(t+offset);osc.stop(t+offset+len+.01)};
+ if(type==='ask')click(420,0,.055,.022);else if(type==='select')click(240,0,.045,.017);else if(type==='mark')click(530,0,.04,.019);else if(type==='swap'){click(245,0,.11,.025);click(370,.22,.075,.023)}else if(type==='wrong')click(220,0,.09,.015);else if(type==='win'){[330,440,550,660].forEach((f,i)=>click(f,i*.095,.19,.014));}
+ }catch(e){} }
+function buzz(x){try{navigator.vibrate?.(x)}catch(e){}}
+function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,1900)}
+function question(id){if(locked)return;if(phase==='listen'){if(id!==st.witness[first.length])return;first.push({id,word:answer(order,st.liars,id)});focus=id;audioEvent('ask');buzz(7);if(first.length===st.witness.length)phase='experiment'}else if(phase==='reask'){if(!st.witness.includes(id)||heard(second,id))return;second.push({id,word:answer(order,st.liars,id)});focus=id;audioEvent('ask');buzz(7);if(remaining().length===1)phase='accuse';else if(second.length===st.witness.length)phase='retry'}render()}
+function mark(id){if(marks.has(id))marks.delete(id);else{if(marks.size>=2)marks.delete(marks.values().next().value);marks.add(id)}audioEvent('mark');buzz(5);render()}
+function onAnimal(id){if(locked)return;if(phase==='listen'||phase==='reask')return question(id);if(phase==='experiment'){if(selected===id)selected=null;else if(selected===null)selected=id;else return swap(selected,id);focus=selected;audioEvent('select');render();}else if(phase==='accuse')mark(id)}
+function informative(){const ps=beforeCandidates();for(let a=0;a<st.n;a++)for(let b=a+1;b<st.n;b++){let o=initial.slice();[o[a],o[b]]=[o[b],o[a]];for(let w of st.witness)if(new Set(ps.map(p=>answer(o,p,w))).size===ps.length)return {a,b,w}}return null}
+function swap(a,b){if(phase!=='experiment'||locked||a===b)return;locked=true;selected=null;focus=null;lastSwap=[a,b];audioEvent('swap');buzz(9);const elA=document.querySelector(`.animal[data-id="${a}"] .portrait`),elB=document.querySelector(`.animal[data-id="${b}"] .portrait`);const duration=reduced()?0:365;
+ if(elA&&elB&&duration){const ra=elA.getBoundingClientRect(),rb=elB.getBoundingClientRect(),board=$('board').getBoundingClientRect(),cx=board.left+board.width/2,cy=board.top+board.height/2;
+ const fly=(el,from,to,sign)=>{const g=document.createElement('div');g.className='flight';g.innerHTML=el.outerHTML;g.style.left=from.left+'px';g.style.top=from.top+'px';document.body.appendChild(g);el.style.opacity='0';const dx=to.left-from.left,dy=to.top-from.top;const off=(sign===1?1:-1)*Math.min(52,board.width*.11);const norm=Math.hypot(dx,dy)||1;const xmid=dx/2-dy/norm*off,ymid=dy/2+dx/norm*off;g.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${xmid}px,${ymid}px) scale(1.10)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(1)`}],{duration,easing:'cubic-bezier(.24,.8,.22,1)',fill:'forwards'});setTimeout(()=>g.remove(),duration+45)};fly(elA,ra,rb,1);fly(elB,rb,ra,-1)}
+ setTimeout(()=>{const i=order.indexOf(a),j=order.indexOf(b);[order[i],order[j]]=[order[j],order[i]];second=[];phase='reask';locked=false;render();},duration)}
+function rewind(){if(locked)return;order=initial.slice();second=[];selected=null;focus=null;phase='experiment';lastSwap=null;render()}
+function verdict(){if(marks.size!==2)return;if(same([...marks],st.liars)){phase='win';focus=null;audioEvent('win');buzz([9,50,14]);render();sparks()}else{audioEvent('wrong');toast('まだ違うみたい。もう一度考えてみよう')}}
+function sparks(){if(reduced())return;const b=$('board').getBoundingClientRect();for(let i=0;i<18;i++){const p=document.createElement('i');p.className='sparkle';p.style.left=(20+Math.random()*60)+'%';p.style.top=(25+Math.random()*50)+'%';p.style.setProperty('--sx',(Math.random()-.5)*180+'px');p.style.setProperty('--sy',(Math.random()-.5)*170+'px');$('board').appendChild(p);setTimeout(()=>p.remove(),1050)}}
+function button(label,action,primary=false,disabled=false){return `<button class="${primary?'btn-primary':'btn-quiet'}" data-action="${action}" ${disabled?'disabled':''}>${label}</button>`}
+function uiText(){if(phase==='listen')return {k:'LISTEN',t:`${first.length} / ${st.witness.length}`,s:'ひとりずつ 聞く',p:'光る動物に質問する',g:'両隣は、正直者と嘘つきが1匹ずつ？',a:button('ルールを見る','help')};
+ if(phase==='experiment')return {k:'EXPERIMENT',t:'席替え',s:'誰を動かす？',p:selected===null?'どの2匹を交換する？':'交換する相手を選ぼう',g:'動物をつかんで、別の動物へ',a:button('ヒント','hint')+button('最初から','restart')};
+ if(phase==='reask')return {k:'ASK AGAIN',t:'再質問',s:'変わったのは誰？',p:'もう一度、聞いてみよう',g:'最初に質問した動物をタップ',a:button('戻す','undo')+button('ヒント','hint')};
+ if(phase==='retry')return {k:'NOT YET',t:'もう一手',s:'まだ2通り',p:'別の交換を試してみよう',g:'実験を変えれば、答えが見える',a:button('席を戻す','undo',true)+button('ヒント','hint')};
+ if(phase==='accuse')return {k:'DEDUCTION',t:'見つけた？',s:'嘘つきは2匹',p:'怪しい2匹を選ぼう',g:'動物をタップして、印を付ける',a:button(`この2匹で決定  ${marks.size}/2`,'verdict',true,marks.size!==2)};
+ return {k:'SOLVED',t:'解けた！',s:'真相が見えた',p:'ふたつの嘘、見抜いた。',g:'席替えから、答えがつながった',a:button(stage===cases.length-1?'最初から':'次の事件へ','next',true)+button('真相を見る','detail')};}
+function evidence(id){let a=heard(first,id),b=heard(second,id);let word=b?.word||a?.word;if(!word)return phase==='listen'&&st.witness.includes(id)?'<div class="bubble unasked">•••</div>':'';if(b&&a&&b.word!==a.word)return `<div class="bubble changed"><span class="old">${a.word}</span><span class="arrow">→</span>${b.word}</div>`;return `<div class="bubble ${word==='YES'?'yes':''}">${word}</div>`}
+function paintRelations(){
+ if(pointer?.moved&&dragTarget!==null){let fake=order.slice(),a=pointer.id,b=dragTarget,i=fake.indexOf(a),j=fake.indexOf(b);[fake[i],fake[j]]=[fake[j],fake[i]];let targetIndex=fake.indexOf(a),center=place(targetIndex),n=fake.length,paths='';for(const k of [(targetIndex+n-1)%n,(targetIndex+1)%n]){let end=place(k),mx=(center.x+end.x)*2,my=(center.y+end.y)*2;paths+=`<path class="preview" d="M ${center.x*4} ${center.y*4} Q ${mx*.73+54} ${my*.73+54} ${end.x*4} ${end.y*4}"/>`}$('links').innerHTML=paths;return;}
+ if(focus===null){$('links').innerHTML='';return}let idx=order.indexOf(focus),near=neighbors(focus);let s=place(idx),paths='';for(let other of near){let e=place(order.indexOf(other));let mx=(s.x+e.x)*2,my=(s.y+e.y)*2;let qx=mx*.72+200*.28,qy=my*.72+200*.28;paths+=`<path d="M ${s.x*4} ${s.y*4} Q ${qx} ${qy} ${e.x*4} ${e.y*4}"/>`}$('links').innerHTML=paths
 }
-function quotes(who,asked){return `<div class="questionRow">${who.map(id=>{const res=asked.find(x=>x[0]===id)?.[1];const prior=phase!=='listen'&&phase!=='chooseSwap'?firstSeen.find(x=>x[0]===id)?.[1]:null;return `<div class="quote"><div class="who">${id}番の人</div><div class="val ${res?res.toLowerCase():'hidden'}">${res||'?'}</div>${prior?`<div class="prior">最初は ${prior}${res&&res!==prior?' → 変化！':''}</div>`:''}</div>`}).join('')}</div>`;}
-function candidatePairs(){return initialCandidates.map(x=>`${x}番`).join(' または ');}
-function suggestion(){for(let i=1;i<=S.n;i++)for(let j=i+1;j<=S.n;j++){const test=originalOrder.slice();let a=test.indexOf(i),b=test.indexOf(j);[test[a],test[b]]=[test[b],test[a]];const code=l=>S.witnesses.map(w=>getAnswer(test,l,w)).join('|');if(new Set(initialCandidates.map(code)).size===initialCandidates.length)return [i,j];}return null;}
-function panel(){let html='';
- if(phase==='listen'){
-  const next=nextPerson();html=`<h2 class="panelTitle">${firstSeen.length===0?'まずは、1人目の話を聞こう':'1人目の答えが出た！'}</h2><p class="panelBody">${firstSeen.length===0?`最初は <b>${next}番</b> の人だけ。光る顔をタップしてね。`:`いきなり答えを決めなくて大丈夫。次は <b>${next}番</b> の人に聞こう。`}</p>${quotes(S.witnesses,firstSeen)}<div class="tinyline"><span class="smallPill">${firstSeen.length} / ${S.witnesses.length} 人に聞いた</span></div>`;
- }else if(phase==='chooseSwap'){
-  html=`<h2 class="panelTitle">まだ、どちらか分からない</h2><p class="panelBody">${S.coach?'1番も2番もYES。':'ここまでの2人の発言では、決め手がありません。'} <b>席を変えて、同じ人にもう一度聞こう。</b></p>${quotes(S.witnesses,firstSeen)}`;
-  if(S.coach)html+=`<div class="feedback">ここまでの候補は <strong>${candidatePairs()}</strong>。<br>次は「席替えの前後で、誰の答えが変わるか」を見よう。</div>`;
-  else html+=`<button class="ghost" id="hintCandidates">${hintLevel>=1?'候補を確認中':'候補のヒントを見る'}</button>${hintLevel>=1?`<div class="hint">考えられるうそつきは <strong>${candidatePairs()}</strong>。</div>`:''}`;
-  html+=`<p class="panelBody" style="margin-top:12px">円卓の<b>交換したい2人</b>を順にタップ。${picked.length?'あと1人選ぼう。':''}</p><button class="ghost" id="hintSwap">どの席を動かす？ ヒント</button>${hintLevel>=2?`<div class="hint"><strong>${suggestion()?.join('番と')}番</strong> を入れ替えると、2つの仮説で違う答えが出ます。</div>`:''}`;
- }else if(phase==='listenAgain'){
-  const next=nextPerson();html=`<h2 class="panelTitle">席替え完了。もう一度聞こう</h2><p class="panelBody"><b>${finalSwap.join('番と')}番</b> の席を交換しました。<br>前と同じ <b>${S.witnesses.join('番・')}番</b> に、順番に聞いてみよう。</p>${quotes(S.witnesses,afterSeen)}<p class="panelBody" style="text-align:center;margin:0">${next}番の人をタップ</p>`;
- }else if(phase==='retrySwap'){
-  html=`<h2 class="panelTitle">まだ、決め手がない！</h2><p class="panelBody">今回の席替えでは、2つの仮説がまだ区別できません。でも、失敗ではありません。<b>動かし方も推理の一部</b>です。</p>${quotes(S.witnesses,afterSeen)}<button class="action" id="tryAgain">もとの席に戻して別の実験</button><button class="ghost" id="showGoodSwap">交換のヒント</button>${hintLevel>=2?`<div class="hint">たとえば ${suggestion()?.join('番と')}番 を交換してみよう。</div>`:''}`;
- }else if(phase==='guess'){
-  html=`<h2 class="panelTitle">答えが分かれた！</h2><p class="panelBody">同じ人に聞いたのに答えが変化しました。2つの仮説のうち、<b>今回の証言に合うのは1つだけ</b>です。</p>${quotes(S.witnesses,afterSeen)}<div class="feedback good">この実験で、うそつきを1人に絞れたよ。<br><b>さあ、だれだと思う？</b></div><button class="action" id="confirm" ${selectedGuess===null?'disabled':''}>${selectedGuess===null?'人を1人選んでね':selectedGuess+'番がうそつき！'}</button>${badGuess?`<div class="feedback bad">${badGuess}</div>`:''}`;
- }else if(phase==='won'){
-  let obs=swapLog[swapLog.length-1];const candidates=initialCandidates;const pred=l=>S.witnesses.map(w=>getAnswer(obs.order,l,w)).join('・');
-  html=`<h2 class="panelTitle" style="color:#207A6A">✓ 正解！ うそつきを見つけた</h2><p class="panelBody">うそつきは <strong>${S.liar}番</strong>。最初は <strong>${candidatePairs()}</strong> のどちらもあり得たけど、席替えで正体が分かったね。</p><div class="kicker">どうやって見分けられたの？</div><table class="answerTable"><thead><tr><th>もし、うそつきが…</th><th>${S.witnesses[0]}番の答え</th><th>${S.witnesses[1]}番の答え</th></tr></thead><tbody>${candidates.map(l=>`<tr class="${l===S.liar?'actual':''}"><td>${l}番なら</td>${S.witnesses.map(w=>`<td class="${getAnswer(obs.order,l,w).toLowerCase().charAt(0)}">${getAnswer(obs.order,l,w)}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="panelBody">実際の答えは <b>${afterSeen.map(x=>x[1]).join('・')}</b>。だから、うそつきは <b>${S.liar}番</b> に決まる！</p><div class="feedback good">${attempts===1?'交換1回で見抜けた！':'何度か試して見抜けた！'}　席替えは、答えを作る操作じゃなくて、<b>正体を確かめる実験</b>なんだ。</div><button class="action" id="next">${index===stages.length-1?'最初からもう一度':'次の問題へ →'}</button>`;
- }
- $('#panel').innerHTML=html;
- $('#hintCandidates')?.addEventListener('click',()=>{hintLevel=Math.max(hintLevel,1);draw()});
- $('#hintSwap')?.addEventListener('click',()=>{hintLevel=2;draw()});
- $('#showGoodSwap')?.addEventListener('click',()=>{hintLevel=2;draw()});
- $('#tryAgain')?.addEventListener('click',()=>{order=originalOrder.slice();phase='chooseSwap';picked=[];afterSeen=[];finalSwap=null;swapLog=swapLog.slice(0,1);draw()});
- $('#confirm')?.addEventListener('click',()=>{if(selectedGuess===null)return;if(selectedGuess===S.liar){phase='won';draw()}else{badGuess='まだ違うみたい。変化した答えを、もう一度見比べよう。';draw()}});
- $('#next')?.addEventListener('click',()=>{index=(index+1)%stages.length;reset();window.scrollTo?.({top:0,behavior:'smooth'})});
-}
-function draw(){
- $('#stageLabel').textContent=S.label;
- const step=phaseStep();$('#progress').querySelectorAll('.bit').forEach((el,i)=>{el.className='bit'+(i<step?' done':i===step?' current':'')});
- board();panel();
-}
-$('#help').addEventListener('click',()=>$('#modalBg').classList.remove('hidden'));
-$('#closeHelp').addEventListener('click',()=>$('#modalBg').classList.add('hidden'));
-$('#modalBg').addEventListener('click',e=>{if(e.target===$('#modalBg'))$('#modalBg').classList.add('hidden')});
-$('#reset').addEventListener('click',()=>reset());
+function paintSeats(){let active=phase==='listen'?st.witness[first.length]:null;let near=focus!==null?neighbors(focus):[];
+ $('seats').innerHTML=order.map((id,position)=>{let p=place(position),cl=['animal'];if(active===id||phase==='reask'&&st.witness.includes(id)&&!heard(second,id))cl.push('ready');if(near.includes(id))cl.push('near');if(selected===id)cl.push('picked');if(marks.has(id))cl.push('marked');if(phase==='win')cl.push(st.liars.includes(id)?'liar':'safe');return `<div class="seat" style="--x:${p.x}%;--y:${p.y}%" data-seat="${position}"><button type="button" class="${cl.join(' ')}" data-id="${id}" aria-label="${name(id)}：${heard(second,id)?.word||heard(first,id)?.word||'未質問'}">${avatar(id)}</button>${evidence(id)}<button type="button" class="memo ${marks.has(id)?'active':''} ${phase==='accuse'?'in-answer':''}" data-mark="${id}" aria-label="${name(id)}：容疑者マーク"><span class="dot">${marks.has(id)?'!':phase==='accuse'?'?':''}</span></button></div>`}).join('');}
+function render(){let info=uiText();$('caseCount').textContent=`${String(stage+1).padStart(2,'0')} / ${String(cases.length).padStart(2,'0')}`;$('chapter').textContent=st.caption;[...$('progress').children].forEach((v,i)=>v.className=i<stagePart()?'passed':i===stagePart()?'now':'');$('core').innerHTML=`<div class="core-label">${info.k}</div><div class="core-main">${info.t}</div><div class="core-sub">${info.s}</div>`;$('prompt').textContent=info.p;$('guide').textContent=info.g;$('actions').innerHTML=info.a;paintSeats();paintRelations()}
+const hypoMarkup=p=>`<div class="hypo"><label>可能性</label><div class="mini">${p.map(x=>avatar(x)).join('')}</div></div>`;
+function openSheet(type='hint'){let content='';if(type==='help'){content=`<div class="eyebrow">HOW TO PLAY</div><h2>席替えは、実験だ。</h2><p>6匹までの動物の中に、<strong>嘘つきが2匹。</strong> 正直者は本当のことを言い、嘘つきは必ず逆のことを言う。</p><p>みんなに聞くのは、<strong>「両隣は正直者と嘘つきが1匹ずつ？」</strong>という同じ質問。</p><p>① 光る動物を順番にタップして聞く。<br>② 動物をドラッグして2匹の席を交換する。<br>③ 最初に話した動物へ再質問する。<br>④ 嘘つき2匹に印を付けて指摘する。</p><p>動物の右上の小さな点を押すか、顔を長押しすると容疑者マークを付けられる。席替えで印も一緒に動く。</p>`}
+ else if(type==='detail'){content=`<div class="eyebrow">THE ANSWER</div><h2>なぜ、わかった？</h2><p>最初の3つの証言と矛盾しない組は、次の2通り。</p><div class="hypotheses">${beforeCandidates().map(hypoMarkup).join('')}</div><p>${lastSwap?`${name(lastSwap[0])}と${name(lastSwap[1])}の席を入れ替えた後、`:''}聞き直した証言を合わせると、<strong>${st.liars.map(name).join('と')}</strong>だけが残る。</p><p>席替えは、発言を合わせる操作ではない。<strong>2つの仮説を見分けるための実験</strong>だったんだ。</p>`}
+ else {guideLevel=Math.min(guideLevel+1,3);if(phase==='listen'){content=`<div class="eyebrow">A SMALL CLUE</div><h2>3匹だけを見よう。</h2><p>一度に全員を考える必要はない。今話している動物と、その両隣だけを見る。YESでも、話し手が嘘つきなら意味が逆になるよ。</p>`}else if(guideLevel===1){content=`<div class="eyebrow">A SMALL CLUE</div><h2>答えはまだ、2通り。</h2><p>最初の証言だけでは決められない。<strong>どの席を交換したら2つの仮説の答えが分かれるか</strong>、そこが考えどころ。</p>`}else if(guideLevel===2){content=`<div class="eyebrow">TWO POSSIBILITIES</div><h2>どっちが嘘つき？</h2><p>最初の証言と矛盾しない2組は、こちら。</p><div class="hypotheses">${beforeCandidates().map(hypoMarkup).join('')}</div><p>どちらの組でも今の発言は同じ。交換したら、違いが出るだろうか？</p>`}else{let g=informative();content=`<div class="eyebrow">ONE USEFUL TEST</div><h2>この席替えを試そう。</h2><div class="hypotheses">${g?`<div class="hypo"><label>交換</label><div class="mini">${avatar(g.a)}${avatar(g.b)}</div></div><div class="hypo"><label>再質問</label><div class="mini">${avatar(g.w)}</div></div>`:''}</div><p>この交換と再質問なら、2つの仮説で答えが異なるはず。</p>`}}
+ $('sheet').innerHTML=`<div class="line"></div>${content}<div class="footbtns">${type==='hint'&&guideLevel<3&&phase!=='listen'?button('次のヒント','more'):''}${button('円卓にもどる','close',true)}</div>`;$('veil').hidden=false;}
+function closeSheet(){$('veil').hidden=true}
+$('veil').addEventListener('click',e=>{if(e.target===$('veil'))closeSheet();let a=e.target.closest('[data-action]');if(a){if(a.dataset.action==='more')openSheet('hint');else if(a.dataset.action==='close')closeSheet()}});
+$('actions').addEventListener('click',e=>{let b=e.target.closest('[data-action]');if(!b)return;switch(b.dataset.action){case'help':openSheet('help');break;case'hint':openSheet('hint');break;case'undo':rewind();break;case'restart':reset();break;case'verdict':verdict();break;case'next':stage=(stage+1)%cases.length;reset();break;case'detail':openSheet('detail');break;}});
+$('soundBtn').addEventListener('click',()=>{muted=!muted;$('soundBtn').querySelector('.wave').style.display=muted?'none':'block';$('soundBtn').setAttribute('aria-label',muted?'音を出す':'音を切る');if(!muted)audioEvent('select')});$('helpBtn').addEventListener('click',()=>openSheet('help'));
+function dropAt(x,y,exclude){let found=null,dist=Infinity;document.querySelectorAll('.animal').forEach(el=>{const id=+el.dataset.id;if(id===exclude)return;let r=el.querySelector('.portrait').getBoundingClientRect(),d=Math.hypot(r.left+r.width/2-x,r.top+r.height/2-y);if(d<Math.max(59,r.width*.95)&&d<dist){dist=d;found=id}});return found}
+function clearPointer(){clearTimeout(holdTimer);holdTimer=null;pointer=null;dragTarget=null;$('follower').style.display='none';document.querySelectorAll('.animal.drop,.animal.dim').forEach(el=>el.classList.remove('drop','dim'));paintRelations()}
+$('seats').addEventListener('pointerdown',e=>{if(e.target.closest('.memo'))return;const b=e.target.closest('.animal');if(!b||locked)return;if(pointer)return;let id=+b.dataset.id;pointer={id,pid:e.pointerId,x:e.clientX,y:e.clientY,moved:false,longPressed:false};try{b.setPointerCapture(e.pointerId)}catch(_){}
+ holdTimer=setTimeout(()=>{if(pointer&&!pointer.moved){clearPointer();ignoreClick=Date.now()+400;mark(id)}},520)});
+$('seats').addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.pid||locked)return;let p=pointer;if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>9){clearTimeout(holdTimer);if(phase==='experiment')p.moved=true}if(!p.moved||phase!=='experiment')return;if($('follower').style.display!=='block'){$('follower').innerHTML=avatar(p.id);$('follower').style.display='block'}$('follower').style.left=e.clientX+'px';$('follower').style.top=e.clientY+'px';let target=dropAt(e.clientX,e.clientY,p.id);if(target!==dragTarget){dragTarget=target;paintRelations()}document.querySelectorAll('.animal').forEach(el=>{el.classList.toggle('drop',+el.dataset.id===dragTarget);el.classList.toggle('dim',+el.dataset.id===p.id)});e.preventDefault();},{passive:false});
+$('seats').addEventListener('pointerup',e=>{if(!pointer||e.pointerId!==pointer.pid)return;const p=pointer,target=p.moved?dropAt(e.clientX,e.clientY,p.id):null;clearPointer();ignoreClick=Date.now()+350;if(p.longPressed)return;if(p.moved){if(target!==null)swap(p.id,target);else toast('交換する動物の上で指を離そう')}else onAnimal(p.id)});
+$('seats').addEventListener('pointercancel',()=>{if(pointer)clearPointer()});
+$('seats').addEventListener('click',e=>{let m=e.target.closest('.memo');if(m){mark(+m.dataset.mark);return}if(e.detail===0){let b=e.target.closest('.animal');if(b)onAnimal(+b.dataset.id)}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+window.__entakuV5={get:()=>({stage,phase,order:[...order],first:[...first],second:[...second],candidates:remaining(),marks:[...marks],liars:st.liars}),answer,question,swap,mark,rewind,reset,next:()=>{stage=(stage+1)%cases.length;reset()},informative,verdict};
 reset();
 })();
-</script></body></html>
+</script>
+</body></html>
