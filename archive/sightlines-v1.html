@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#f6f5ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>SIGHTLINES — 森のむこう</title>
+<style>
+:root{--bg:#f6f5ef;--paper:#fffdf6;--ink:#283e38;--quiet:#778c82;--faint:#b1bfb6;--line:#dae4d9;--teal:#287b70;--lime:#bfd8ae;--amber:#b67b4e;--fox:#d5804e}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:2px solid #48aa95;outline-offset:3px}
+.app{max-width:530px;min-height:100dvh;margin:auto;padding:calc(env(safe-area-inset-top) + 12px) 15px calc(env(safe-area-inset-bottom) + 20px);background:radial-gradient(ellipse at 50% 32%,#fffefa 0%,#f6f5ef 82%);display:flex;flex-direction:column;align-items:stretch;overflow:hidden}
+.header{display:flex;justify-content:space-between;align-items:center;min-height:38px}.brand{font-family:Georgia,"Yu Mincho",serif;font-size:17px;letter-spacing:.125em;font-weight:750;white-space:nowrap}.subtitle{font-size:9px;color:var(--quiet);letter-spacing:.22em;margin-top:4px}.top-right{display:flex;align-items:center;gap:12px}.levelnum{font:13px Georgia,serif;letter-spacing:.05em;color:#728d7e}.mutebtn{min-width:37px;min-height:37px;border:1px solid #e2eae0;border-radius:50%;display:grid;place-items:center;font-size:15px;background:#ffffffb0}
+.intro{text-align:center;padding:12px 0 3px}.intro h1{font-weight:700;font-size:19px;letter-spacing:.06em;margin:1px 0 4px}.intro .sub{font-size:11px;color:var(--quiet);line-height:1.6}
+.sceneWrap{margin-top:11px;border:1px solid #d9e4d8;border-radius:19px;background:linear-gradient(180deg,#fafdf8,#eaf3e8 82%,#dfe9d9);box-shadow:0 10px 28px #56816b0d,inset 0 1px 0 white;overflow:hidden;position:relative}
+.sceneHead{position:absolute;z-index:2;left:16px;right:16px;top:12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.sceneHead .cap{font-size:10px;letter-spacing:.1em;color:#617d70;font-weight:760;background:#fffdf7b8;padding:5px 9px;border-radius:50px}.sceneHead .live{font-size:9px;letter-spacing:.11em;color:#879e91;background:#fbfff8cb;padding:5px 8px;border-radius:50px}.scene{width:100%;height:auto;display:block;aspect-ratio:400/191}
+.viewResult{display:flex;align-items:center;justify-content:center;gap:9px;min-height:38px;padding:5px 12px 8px;font-size:12px;font-weight:680;color:#5a746b;letter-spacing:.025em}.dot{width:8px;height:8px;border-radius:50%;background:#c4cfc5;flex-shrink:0}.dot.observed{background:var(--teal)}.dot.fox{background:var(--fox)}
+.mapStage{position:relative;min-height:0;display:flex;align-items:center;justify-content:center;margin:2px 0 1px}
+.map{width:100%;max-width:410px;display:block;touch-action:none;aspect-ratio:1}
+.boardHint{text-align:center;font-size:10px;color:#83968b;line-height:1.5;min-height:15px;letter-spacing:.02em;margin-top:-1px}
+.footer{margin-top:7px;text-align:center;min-height:102px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:5px}.footerText{font-size:14px;font-weight:720;line-height:1.45;min-height:20px}.footerSub{font-size:11px;color:var(--quiet);line-height:1.5;min-height:18px}
+.actions{display:flex;justify-content:center;gap:9px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.mainBtn{background:var(--teal);border-radius:30px;color:#fff;min-width:150px;min-height:43px;font-size:13px;font-weight:730;letter-spacing:.06em;padding:9px 19px;box-shadow:0 6px 16px #4c8d7a26;transition:transform .12s,opacity .15s}
+.mainBtn:active{transform:scale(.975)}.mainBtn:disabled{opacity:.36;box-shadow:none}.subBtn{color:#718a7e;border:1px solid #d9e5da;background:#fffdf6aa;border-radius:26px;padding:9px 13px;min-height:40px;font-size:11px;font-weight:710}.plainBtn{font-size:11px;color:#788e82;padding:10px}
+.toast{position:fixed;bottom:calc(25px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:20;background:#294c42;color:white;padding:9px 15px;border-radius:30px;font-size:11px;box-shadow:0 8px 18px #263c3535;max-width:90%;pointer-events:none;opacity:0;transition:opacity .2s}.toast.show{opacity:1}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#1e342b72;z-index:30;padding:22px;backdrop-filter:blur(4px)}.modal.open{display:flex}.modalBody{background:#fffdf6;border-radius:24px;width:min(100%,410px);padding:23px;text-align:center;box-shadow:0 18px 40px #1d2f2524}.modalBody h2{font-family:Georgia,"Yu Mincho",serif;margin:4px 0 11px;font-size:23px;color:#314c3f}.modalBody p{font-size:12px;color:#63766b;line-height:1.8;margin:6px 0}.proof{padding:10px 14px;background:#eef5eb;border-radius:14px;margin:13px 0;font-size:11px;text-align:left;line-height:1.9;color:#3e6455}.badges{display:flex;justify-content:center;gap:6px;margin:8px 0 10px}.badges span{color:#d8a865;font-size:27px}.hidden{display:none!important}
+@media(max-height:710px){.intro{padding:6px 0 1px}.intro h1{font-size:17px}.sceneWrap{margin-top:7px}.scene{aspect-ratio:400/171}.map{max-width:340px}.footer{min-height:94px}.mapStage{margin:-3px 0}}
+@media(max-width:350px){.app{padding-left:8px;padding-right:8px}.brand{font-size:15px}.intro h1{font-size:17px}.map{max-width:340px}}
+@media(prefers-reduced-motion:reduce){*{transition-duration:0s!important;animation-duration:0s!important}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="header"><div><div class="brand">SIGHTLINES <span style="font-size:14px;letter-spacing:0">· 森のむこう</span></div><div class="subtitle">THE FOREST PERSPECTIVE</div></div><div class="top-right"><div class="levelnum" id="stageNum">01 / 06</div><button class="mutebtn" id="soundBtn" aria-label="音を切り替える">♪</button></div></header>
+ <section class="intro"><h1 id="stageTitle">どこから見れば、わかる？</h1><div class="sub">森に隠れたキツネは、6か所のどこかにいる。</div></section>
+ <section class="sceneWrap" aria-label="フクロウの視界"><div class="sceneHead"><div class="cap" id="sceneLoc">南から見た景色</div><div class="live" id="sceneState">OBSERVED</div></div><svg class="scene" id="scene" viewBox="0 0 400 191" role="img" aria-label="選択中の視点から見た森"></svg><div class="viewResult"><span class="dot" id="resultDot"></span><span id="resultText">キツネの姿は見えない</span></div></section>
+ <section class="mapStage"><svg id="map" class="map" viewBox="0 0 400 400" role="img" aria-label="森の地図と観測地点。フクロウをドラッグして動かせます"></svg></section>
+ <div class="boardHint" id="boardHint">◉ 外側の観測地点をタップ、またはフクロウをドラッグ</div>
+ <footer class="footer"><div class="footerText" id="footTitle">次は、どちらから観察する？</div><div class="footerSub" id="footSub">見方を変えると、木と岩の重なりが変わる</div><div class="actions" id="actions"></div></footer>
+</div>
+<div id="toast" class="toast"></div>
+<div id="modal" class="modal"><div class="modalBody" id="modalContent"></div></div>
+<script id="levels-json" type="application/json">[{"spots":[[0.5345323279313147,0.2943566105505315],[0.17180667216822196,0.2905545611296877],[0.7839633041262735,0.41107665174450597],[0.7729042006529842,0.16475091232915953],[0.4183312902850672,0.4138901183050645],[0.41469716422416975,0.17946507046507795]],"obs":[{"x":0.5527269626704514,"y":0.7243543603644131,"r":0.083,"type":"tree"},{"x":0.7311663589906425,"y":0.5592790557174986,"r":0.118,"type":"tree"},{"x":0.33578869789407806,"y":0.6427077246717695,"r":0.083,"type":"rock"}],"init":3,"target":0},{"spots":[[0.6586539929221836,0.6570250868428552],[0.8411110951457856,0.8313972018607528],[0.41735863171087556,0.7880313199557499],[0.1877374895990798,0.6428280759435329],[0.7846668423047423,0.4143421074528083],[0.30831480248003845,0.16055170508461164]],"obs":[{"x":0.5510295220352623,"y":0.6967019584373475,"r":0.083,"type":"rock"},{"x":0.356752408199157,"y":0.44591431774004286,"r":0.098,"type":"rock"},{"x":0.6884741823297427,"y":0.3186088926670177,"r":0.098,"type":"tree"}],"init":1,"target":4},{"spots":[[0.6523156885292941,0.2995975123701901],[0.4229821451693989,0.5215734552256538],[0.7771426338668078,0.4177713984208504],[0.1839021928539933,0.2844347517466281],[0.7836855277504988,0.16692626536306887],[0.6536677785096295,0.652299219786763]],"obs":[{"x":0.3939656319444971,"y":0.20795753045297746,"r":0.118,"type":"rock"},{"x":0.5819487128440748,"y":0.47663052959076413,"r":0.098,"type":"rock"},{"x":0.23647589143169484,"y":0.47111756603009697,"r":0.083,"type":"tree"}],"init":0,"target":4},{"spots":[[0.6539750108663858,0.7898708019250124],[0.2961752228581976,0.6535426511094592],[0.5414094694976205,0.16860631727052777],[0.7801136227134117,0.5208006270770862],[0.5402435153035202,0.4172752158172776],[0.4203873436654021,0.2925469308476633]],"obs":[{"x":0.7314231665606639,"y":0.376250539566054,"r":0.118,"type":"tree"},{"x":0.5721099039997979,"y":0.6082516818696455,"r":0.132,"type":"tree"},{"x":0.31114909814190933,"y":0.19166711133781805,"r":0.118,"type":"tree"}],"init":1,"target":0},{"spots":[[0.7709984733759259,0.16262776102161888],[0.18889518937525196,0.5277049959424349],[0.18590981665854897,0.7752567610270319],[0.2980468598252112,0.6485660273796875],[0.6658098757312059,0.5237560859785275],[0.7893502603117704,0.4006061277469509]],"obs":[{"x":0.4672941820289575,"y":0.2452916876578024,"r":0.098,"type":"tree"},{"x":0.577728377712666,"y":0.6718461514305923,"r":0.083,"type":"tree"},{"x":0.36937148881736503,"y":0.49441174998956394,"r":0.118,"type":"tree"}],"init":2,"target":3},{"spots":[[0.4157632926001851,0.8314557575656044],[0.8582233244303428,0.5273574395473355],[0.547039790620068,0.28750369834987166],[0.5366619769336801,0.6493873222044003],[0.42913674386006967,0.5235175684272028],[0.2933852089689759,0.4146511014221467]],"obs":[{"x":0.6996686281616025,"y":0.6233640183381044,"r":0.132,"type":"tree"},{"x":0.3878444278526604,"y":0.3117900194667276,"r":0.083,"type":"tree"},{"x":0.3244495195864502,"y":0.6363663930030431,"r":0.098,"type":"rock"}],"init":0,"target":3}]</script>
+<script>
+(()=>{'use strict';
+const levels=JSON.parse(document.getElementById('levels-json').textContent);
+const V=[{name:'西',x:-.22,y:.5,a:180},{name:'北',x:.5,y:-.22,a:270},{name:'東',x:1.22,y:.5,a:0},{name:'南',x:.5,y:1.22,a:90}];
+const $=id=>document.getElementById(id),text=(id,v)=>$(id).textContent=v;
+const stageNames=['はじめての視差','木々のすきま','見えない証拠','反対側の景色','重なる影','最後の観測'];
+const stageNotes=['まずは1回、見る場所を変えてみよう','見やすい場所を自分で選ぼう','隠れていることも大切な情報','見る方向によって左右が変わる','何も見えない景色を比べよう','最小の観測で真実へ'];
+let stage=0,level=null,selected=0,observations={},selectedSpot=null,drag=null,dragged=false,previewPos=null,showSolution=false,soundOn=true,audio=null,toastTimer=null,wrong=0;
+let startAt=Date.now(),cameraAnim=0;
+try{stage=Math.min(levels.length-1,Math.max(0,Number(localStorage.getItem('sightlines-stage')||0)||0))}catch{}
+function sfx(kind){if(!soundOn)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;audio=audio||new C();if(audio.state==='suspended')audio.resume();let now=audio.currentTime;function pluck(freq,offset=.0,dur=.14,v=.055){const o=audio.createOscillator(),g=audio.createGain(),f=audio.createBiquadFilter();o.type='sine';o.frequency.setValueAtTime(freq,now+offset);f.type='lowpass';f.frequency.value=1050;g.gain.setValueAtTime(.0001,now+offset);g.gain.exponentialRampToValueAtTime(v,now+offset+.008);g.gain.exponentialRampToValueAtTime(.0001,now+offset+dur);o.connect(f);f.connect(g);g.connect(audio.destination);o.start(now+offset);o.stop(now+offset+dur+.018)}
+ if(kind==='tap')pluck(392,0,.07,.025);if(kind==='move')pluck(330,0,.095,.042);if(kind==='observe'){pluck(392,0,.09,.035);pluck(523.25,.075,.12,.04)}if(kind==='mark')pluck(440,0,.075,.025);if(kind==='wrong')pluck(330,0,.11,.038);if(kind==='win'){[392,523.25,659.25,783.99].forEach((p,i)=>pluck(p,i*.105,.24,.055))}}
+ catch(e){}}
+function notify(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1700)}
+function xy(p){return [80+p[0]*240,80+p[1]*240]}
+function pos(p){return [80+p.x*240,80+p.y*240]}
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1])}
+function proj(v,p){const dx=.5-v.x,dy=.5-v.y,L=Math.hypot(dx,dy),f=[dx/L,dy/L],r=[-f[1],f[0]],u=(p.x-v.x)*r[0]+(p.y-v.y)*r[1],d=(p.x-v.x)*f[0]+(p.y-v.y)*f[1],k=250/(.48+d);return {x:200+u*k,d,k}}
+function code(v,spot){const f=proj(v,{x:spot[0],y:spot[1]}),fxr=.031*f.k;for(const o of level.obs){const p=proj(v,o),rad=o.r*p.k;if(p.d<f.d-.04 && Math.abs(p.x-f.x)+fxr*.9 < rad)return 'X'}return f.x<170?'L':f.x>230?'R':'C'}
+function currentView(){return previewPos||V[selected]}
+function makeTag(str){return str}
+function leafShape(x,y,r,tint){return `<g transform="translate(${x} ${y})"><circle cx="0" cy="0" r="${r}" fill="${tint}"/><circle cx="${-r*.57}" cy="${r*.05}" r="${r*.72}" fill="${tint}"/><circle cx="${r*.62}" cy="${r*.18}" r="${r*.67}" fill="${tint}"/><circle cx="${-r*.2}" cy="${-r*.43}" r="${r*.68}" fill="#a0bfa0" fill-opacity=".6"/></g>`}
+function sceneryObj(o,view,i){const p=proj(view,o),x=p.x,d=p.d,r=o.r*p.k,base=170-Math.max(0,d-.3)*13;
+ if(o.type==='rock'){const height=Math.max(15,r*.9);return `<g opacity=".97"><ellipse cx="${x}" cy="${base-2}" rx="${r*1.1}" ry="${Math.max(5,r*.24)}" fill="#677e7744"/><path d="M ${x-r} ${base} L ${x-r*.87} ${base-height*.63} Q ${x-r*.5} ${base-height*1.2} ${x-r*.07} ${base-height*1.18} Q ${x+r*.52} ${base-height*1.23} ${x+r*.86} ${base-height*.52} L ${x+r} ${base} Z" fill="#8d9d95"/><path d="M ${x-r*.83} ${base-height*.58} Q ${x-r*.52} ${base-height*1.17} ${x-r*.08} ${base-height*1.16} L ${x-r*.18} ${base-2} L ${x-r} ${base} Z" fill="#b0c0b6" opacity=".65"/></g>`}
+ const tone=i%2?'#81ae8c':'#6fa58b';return `<g><ellipse cx="${x}" cy="${base-1}" rx="${r*1.14}" ry="${Math.max(4,r*.20)}" fill="#446c5044"/><path d="M${x-5} ${base} Q${x-2.8} ${base-19} ${x-3} ${base-28} L${x+5} ${base-28} Q${x+1.6} ${base-12} ${x+4} ${base}Z" fill="#927e62"/>${leafShape(x,base-r*.89,r*.9,tone)}<circle cx="${x-r*.6}" cy="${base-r*.6}" r="${r*.33}" fill="#9cc2a0" opacity=".65"/></g>`
+}
+function foxSvg(x,base,small=false){const sc=small?.72:1;return `<g transform="translate(${x},${base}) scale(${sc})"><ellipse cx="0" cy="1" rx="15" ry="3.3" fill="#626f4e" opacity=".21"/><path d="M-8 -13 L-11 -29 L-2 -24 L0 -17 L5 -28 L13 -31 L10 -12 Z" fill="#c97745"/><path d="M-11 -12 Q-17 -7 -12 -4 Q0 3 14 -6 Q16 -18 8 -20 L-7 -20 Z" fill="#e18b53"/><path d="M-11 -12 Q-10 -4 2 -4 Q9 -4 13 -13 Q4 -10 -1 -15 Z" fill="#fff2d6"/><circle cx="5.5" cy="-15" r="1.7" fill="#344c40"/><path d="M14 -8 Q29 -19 24 -5 Q23 -2 17 -1 L11 -4 Z" fill="#d98a52"/><path d="M19 -8 Q28 -12 24 -5 Q23 -2 18 -2" fill="#fff1d9"/></g>`}
+function sceneSvg(){const v=currentView(),reveal=!previewPos && Object.prototype.hasOwnProperty.call(observations,selected),result=code(v,level.spots[level.target]);const arr=level.obs.map((o,i)=>({type:'obj',z:proj(v,o).d,o,i}));if(reveal && result!=='X' || showSolution){const o={x:level.spots[level.target][0],y:level.spots[level.target][1]};arr.push({type:'fox',z:proj(v,o).d,o})}arr.sort((a,b)=>b.z-a.z);
+ let shapes=`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f9fcf4"/><stop offset="1" stop-color="#e5f0dd"/></linearGradient><linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e3ecd6"/><stop offset="1" stop-color="#cddfbd"/></linearGradient></defs><rect width="400" height="191" fill="url(#sky)"/><path d="M0 143 Q68 114 136 144 T270 144 T400 145 V191 H0Z" fill="#d9e8d3" opacity=".62"/><path d="M0 169 Q85 148 170 167 Q272 147 400 164 V191 H0Z" fill="url(#field)"/><path d="M0 184 Q180 171 400 183" fill="none" stroke="#b5d0aa" stroke-width="1.2" opacity=".75"/>`;
+ for(const a of arr){if(a.type==='obj')shapes+=sceneryObj(a.o,v,a.i);else {const p=proj(v,a.o);const base=170-Math.max(0,p.d-.3)*13;shapes+=foxSvg(p.x,base)}}
+ shapes+=`<path d="M0 190 Q200 184 400 190" fill="none" stroke="#bdd2b5" stroke-width="2"/>`;
+ $('scene').innerHTML=shapes;
+ const loc=previewPos?'視点を動かしている…':`${V[selected].name}から見た景色`;
+ text('sceneLoc',loc);
+ const d=$('resultDot');d.className='dot';
+ if(previewPos){text('sceneState','PREVIEW');text('resultText','まだ観測していない景色');}
+ else if(reveal){text('sceneState','OBSERVED');d.classList.add(result==='X'?'observed':'fox');text('resultText',result==='X'?'キツネの姿は見えなかった':result==='L'?'左側にキツネの姿が見えた':result==='C'?'正面にキツネの姿が見えた':'右側にキツネの姿が見えた')}
+ else{text('sceneState','UNOBSERVED');text('resultText','「観測する」で、この方向から見てみよう')}
+}
+function mapIcon(o,i){const [x,y]=pos(o);if(o.type==='rock'){const r=o.r*230;return `<g><ellipse cx="${x}" cy="${y+5}" rx="${r*.85}" ry="${r*.38}" fill="#7b8a7a35"/><path d="M${x-r*.9} ${y+4} Q${x-r*.65} ${y-r*.65} ${x-r*.16} ${y-r*.65} Q${x+r*.4} ${y-r*.88} ${x+r*.92} ${y+3}Q${x+r*.37} ${y+r*.49} ${x-r*.9} ${y+4}" fill="#9dac9f" stroke="#849a8f" stroke-width="1.5"/><path d="M${x-r*.8} ${y+1} Q${x-r*.51} ${y-r*.66} ${x-r*.1} ${y-r*.54}" fill="none" stroke="#d2d9c6" stroke-width="2.2" opacity=".8"/></g>`}
+ const r=o.r*225;return `<g><ellipse cx="${x}" cy="${y+5}" rx="${r*.68}" ry="${r*.33}" fill="#315f4540"/><rect x="${x-3.5}" y="${y+1}" width="7" height="${r*.49}" rx="2" fill="#9d8b6b"/>${leafShape(x,y-r*.14,r*.86,i%2?'#7eae8f':'#669f84')}<circle cx="${x-r*.31}" cy="${y-r*.38}" r="${r*.25}" fill="#a6c9a7" opacity=".6"/></g>`}
+function eyeIcon(x,y,active=false){return `<g transform="translate(${x} ${y})" class="owl"><circle r="${active?19:16}" fill="${active?'#e5f5e9':'#fbfdf7'}" stroke="${active?'#3e967e':'#bfcec2'}" stroke-width="${active?2.5:1.5}"/><path d="M-9 -6 L-6 -11 L-1 -7 L5 -11 L9 -6 L10 6 Q0 15 -10 6Z" fill="${active?'#70a993':'#9ab9a6'}"/><circle cx="-4.1" cy="-1.3" r="4" fill="#f7f6e8"/><circle cx="4.1" cy="-1.3" r="4" fill="#f7f6e8"/><circle cx="-3.3" cy="-.9" r="1.7" fill="#37554a"/><circle cx="3.3" cy="-.9" r="1.7" fill="#37554a"/><path d="M-2 4 L0 7 L2 4Z" fill="#c58e54"/></g>`}
+function mapSvg(){const cx=200,cy=200;let html=`<defs><radialGradient id="meadow" cx="39%" cy="35%" r="74%"><stop stop-color="#f4f8ea"/><stop offset="1" stop-color="#dfebd7"/></radialGradient></defs><circle cx="200" cy="200" r="169" fill="none" stroke="#dce7dc" stroke-width="1.4" stroke-dasharray="2 8"/><circle cx="200" cy="200" r="129" fill="url(#meadow)" stroke="#cfe0cf" stroke-width="1.6"/><circle cx="200" cy="200" r="124" fill="none" stroke="#ffffffb8" stroke-width="2"/><g opacity=".23" stroke="#8eb29d" stroke-width="1.2" fill="none"><path d="M104 177Q158 158 215 171T308 158"/><path d="M112 273Q188 288 300 255"/></g>`;
+ // faint direction to center; do not show target
+ const v=currentView(),[vx,vy]=pos(v);
+ html+=`<path d="M${vx} ${vy} L200 200" stroke="#7cae9a" stroke-width="2" stroke-dasharray="4 7" opacity=".65"/>`;
+ if(selectedSpot!==null){const [px,py]=xy(level.spots[selectedSpot]);html+=`<path d="M${vx} ${vy} L${px} ${py}" stroke="#b7794d" stroke-width="1.9" stroke-dasharray="5 5" opacity=".9"/>`}
+ for(const o of level.obs)html+=mapIcon(o,level.obs.indexOf(o));
+ for(let i=0;i<level.spots.length;i++){const [x,y]=xy(level.spots[i]),chosen=i===selectedSpot,solved=showSolution&&i===level.target;
+ html+=`<g data-spot="${i}" class="spot" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="17" fill="${chosen?'#e7aa73':'#fffdf3'}" stroke="${chosen?'#ad6d3e':'#87a89a'}" stroke-width="${chosen?2.8:1.7}"/><circle cx="${x}" cy="${y}" r="20" fill="transparent"/><text x="${x}" y="${y+4.5}" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="13" fill="${chosen?'#503e30':'#476c5d'}">${i+1}</text>${solved?`<circle cx="${x}" cy="${y}" r="22" fill="none" stroke="#d9894d" stroke-width="3"/>`:''}</g>`}
+ for(let i=0;i<V.length;i++){const p=V[i];const [x,y]=pos(p),active=i===selected&&!previewPos;html+=`<g data-view="${i}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="27" fill="transparent"/>${eyeIcon(x,y,active)}${Object.prototype.hasOwnProperty.call(observations,i)?`<circle cx="${x+13}" cy="${y-13}" r="4" fill="#388675" stroke="#f9fcf4" stroke-width="1.4"/>`:''}</g>`}
+ if(previewPos){const [x,y]=pos(previewPos);html+=eyeIcon(x,y,true)}
+ text('boardHint',previewPos?'指を離すと、最寄りの観測地点に止まります':'フクロウを指で回す ／ 観測地点をタップ');
+ $('map').innerHTML=html;
+}
+function currentCandidates(){let candidates=Array.from({length:level.spots.length},(_,i)=>i);for(const [k,c] of Object.entries(observations)){const v=V[Number(k)];candidates=candidates.filter(i=>code(v,level.spots[i])===c)}return candidates}
+function buildActions(){const seen=Object.prototype.hasOwnProperty.call(observations,selected);let heading='',sub='',buttons='';const b=(label,which,kind='mainBtn',disabled=false)=>`<button data-action="${which}" class="${kind}" ${disabled?'disabled':''}>${label}</button>`;
+ if(showSolution){heading='真相が見えた！';sub='違う場所から見ると、隠れていたものが見えてくる';buttons=b(stage===levels.length-1?'最初から遊ぶ':'次の森へ →','next')+b('観測を振り返る','reflect','subBtn')}
+ else if(selectedSpot!==null){heading=`${selectedSpot+1} 番の隠れ場所？`;sub='観測した景色を組み合わせて、確かめよう';buttons=b('ここにいる！','guess')+b('選び直す','unmark','subBtn')}
+ else if(!seen){heading='この方向から確かめよう';sub='木・岩の位置を比べてから観測する';buttons=b('◉ 観測する','observe')+b('ヒント','hint','subBtn')}
+ else{heading=Object.keys(observations).length===1?'次はどこから見れば、わかる？':'見えた景色を組み合わせよう';sub='隠れ場所をタップして推理 ／ 別の方角から再観測';buttons=b('観測地点を変える','choose','subBtn')+b('ヒント','hint','subBtn')}
+ text('footTitle',heading);text('footSub',sub);$('actions').innerHTML=buttons;
+}
+function redraw(){text('stageNum',`${String(stage+1).padStart(2,'0')} / ${String(levels.length).padStart(2,'0')}`);text('stageTitle',stageNames[stage]);sceneSvg();mapSvg();buildActions()}
+function reset(){level=levels[stage];level.obs=level.obs.map(x=>({...x}));selected=level.init;previewPos=null;drag=null;selectedSpot=null;showSolution=false;wrong=0;startAt=Date.now();observations={[selected]:code(V[selected],level.spots[level.target])};try{localStorage.setItem('sightlines-stage',String(stage))}catch{}redraw()}
+function chooseView(i,animated=true){
+ if(cameraAnim){cancelAnimationFrame(cameraAnim);cameraAnim=0}
+ const from=currentView();selected=i;selectedSpot=null;
+ if(!animated){previewPos=null;sfx('move');redraw();return}
+ const a0=Math.atan2(from.y-.5,from.x-.5),a1=Math.atan2(V[i].y-.5,V[i].x-.5);
+ let diff=(a1-a0+Math.PI*3)%(2*Math.PI)-Math.PI;
+ if(Math.abs(diff)<.02){previewPos=null;redraw();return}
+ let start=0;sfx('move');
+ function frame(ts){if(!start)start=ts;const t=Math.min(1,(ts-start)/290),z=1-Math.pow(1-t,3),a=a0+diff*z;previewPos={x:.5+.72*Math.cos(a),y:.5+.72*Math.sin(a)};redraw();if(t<1)cameraAnim=requestAnimationFrame(frame);else{cameraAnim=0;previewPos=null;redraw()}}
+ cameraAnim=requestAnimationFrame(frame)
+}
+function observe(){if(Object.prototype.hasOwnProperty.call(observations,selected)){notify('この場所ではもう観測済み');return}const c=code(V[selected],level.spots[level.target]);observations[selected]=c;selectedSpot=null;sfx('observe');redraw();if(currentCandidates().length===1)notify('観測がひとつの真実につながった！');else notify('景色を記録した。まだ別の可能性もある')}
+function guess(){if(selectedSpot===null)return;if(selectedSpot===level.target){showSolution=true;sfx('win');redraw();openWin()}else{wrong++;sfx('wrong');notify('そこではなさそう。視点を変えてもう一度考えてみよう');selectedSpot=null;redraw()}}
+function openWin(){const n=Object.keys(observations).length,cands=currentCandidates();const stars=wrong===0&&n<=2?3:wrong===0&&n<=3?2:1;
+ $('modalContent').innerHTML=`<div style="color:#438873;font-size:12px;letter-spacing:.22em">DISCOVERED</div><h2>見つけた！</h2><div class="badges">${Array.from({length:3},(_,i)=>`<span style="opacity:${i<stars?1:.18}">✦</span>`).join('')}</div><p>キツネは <strong>${level.target+1} 番</strong> にいた。</p><p>見た方向は ${n} か所。<br>景色の重なりを手がかりに、隠れ場所を探し当てた。</p><div class="proof">${Object.entries(observations).map(([k,c])=>`<div>${V[+k].name}から：${c==='X'?'見えなかった':c==='L'?'左に見えた':c==='C'?'正面に見えた':'右に見えた'}</div>`).join('')}<div style="margin-top:5px"><strong>${cands.length===1?'この観測だけで隠れ場所は一意に確定。':'まだ別の場所も可能。次は確実に見抜ける視点を探そう。'}</strong></div></div><button class="mainBtn" data-modal="next">${stage===levels.length-1?'最初から遊ぶ':'次の森へ →'}</button><button class="plainBtn" data-modal="close">盤面を見る</button>`;$('modal').classList.add('open')}
+function hint(){let possible=currentCandidates();let rest=V.map((v,i)=>i).filter(i=>!Object.prototype.hasOwnProperty.call(observations,i));
+ let best=rest.map(i=>({i,groups:new Set(possible.map(j=>code(V[i],level.spots[j]))).size})).sort((a,b)=>b.groups-a.groups);
+ let msg=Object.keys(observations).length===1?'キツネが見えなかった場所には、木や岩の影がある。そこから考えてみよう。':'いままでの観測で残る隠れ場所の可能性を考えてみよう。';
+ if(rest.length>0)msg+=` 次は ${V[best[0].i].name} 側の重なり方を調べるのがよさそう。`;
+ $('modalContent').innerHTML=`<div style="font-size:12px;letter-spacing:.2em;color:#7e9a88">HINT</div><h2>視点を変える</h2><p>${msg}</p><p>視点を動かすだけなら、観測回数には数えないよ。</p><button class="mainBtn" data-modal="close">なるほど</button>`;$('modal').classList.add('open');sfx('mark')}
+function handleAction(a){if(a==='observe')observe();if(a==='guess')guess();if(a==='unmark'){selectedSpot=null;redraw()}if(a==='next')next();if(a==='hint')hint();if(a==='choose'){notify('円卓の外側のフクロウを動かしてみよう')}if(a==='reflect'){openWin()}}
+function next(){stage=(stage+1)%levels.length;$('modal').classList.remove('open');reset()}
+$('actions').addEventListener('click',e=>{const t=e.target.closest('[data-action]');if(t)handleAction(t.dataset.action)});
+$('modal').addEventListener('click',e=>{const t=e.target.closest('[data-modal]');if(t){if(t.dataset.modal==='close')$('modal').classList.remove('open');if(t.dataset.modal==='next')next()}else if(e.target===$('modal'))$('modal').classList.remove('open')});
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;text('soundBtn',soundOn?'♪':'♩');if(soundOn)sfx('tap')});
+const map=$('map');
+function mapPointer(e){const box=map.getBoundingClientRect(),s=400/box.width;return [(e.clientX-box.left)*s,(e.clientY-box.top)*s]}
+function handleDragPoint(e){const [px,py]=mapPointer(e),a=Math.atan2(py-200,px-200),x=.5+.72*Math.cos(a),y=.5+.72*Math.sin(a);previewPos={x,y};redraw()}
+map.addEventListener('pointerdown',e=>{const view=e.target.closest('[data-view]');if(!view||showSolution)return;drag={pointer:e.pointerId,id:+view.dataset.view,start:mapPointer(e),moved:false};map.setPointerCapture(e.pointerId)});
+map.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pointer)return;const p=mapPointer(e);if(dist(p,drag.start)>6)drag.moved=true;if(drag.moved){handleDragPoint(e);e.preventDefault()}});
+map.addEventListener('pointerup',e=>{if(!drag||e.pointerId!==drag.pointer)return;const d=drag;drag=null;if(d.moved){const p=previewPos||V[d.id];let nearest=0,m=Infinity;V.forEach((v,i)=>{const z=Math.hypot(p.x-v.x,p.y-v.y);if(z<m){m=z;nearest=i}});previewPos=null;chooseView(nearest,false)}else chooseView(d.id,true)});
+map.addEventListener('pointercancel',()=>{drag=null;previewPos=null;redraw()});
+map.addEventListener('click',e=>{if(showSolution)return;const t=e.target.closest('[data-spot]');if(t){let n=Number(t.dataset.spot);selectedSpot=selectedSpot===n?null:n;sfx('mark');redraw()}});
+reset();
+})();
+</script>
+</body>
+</html>
