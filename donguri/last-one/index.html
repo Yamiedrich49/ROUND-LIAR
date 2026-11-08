@@ -172,7 +172,7 @@ function portrait(i,cls=''){
 function acornIcon(){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-4 0-6 3-6 6 0 4 2 8 6 8s6-4 6-8c0-3-2-6-6-6Z" fill="#bd885c"/><path d="M5 10c.1-3 3-5 7-5s6.9 2 7 5H5Z" fill="#8b644c"/><path d="M12 6V3m0 2c-2-2-4-2-6-1" stroke="#6e8f5f" stroke-width="2" stroke-linecap="round"/></svg>`}
 function soundIcon(on){return on?`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Zm8-2a6 6 0 0 1 0 10m2-13a10 10 0 0 1 0 16"/></svg>`:`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Z M15 9l6 6m0-6-6 6"/></svg>`}
 
-const GAME={stage:0,unlocked:0,selected:[],used:false,phase:'select',latest:null,marked:{},role:1,focus:[],failures:0,streak:0,best:0,cycle:0,completedMask:0,forfeitedMask:0,nextStreakStage:0,streakEligible:true,earnedStreak:false};
+const GAME={stage:0,unlocked:0,selected:[],used:false,phase:'select',latest:null,marked:{},role:1,focus:[],failures:0,lastMarked:-1,streak:0,best:0,cycle:0,completedMask:0,forfeitedMask:0,nextStreakStage:0,streakEligible:true,earnedStreak:false};
 const $=id=>document.getElementById(id);
 let soundOn=localStorage.getItem('donguri_last_one_sound')!=='off';
 let ctx=null,noiseBuffer=null,lastSound=0;
@@ -208,7 +208,7 @@ function tapWood(offset=0,depth=1){
  env.gain.exponentialRampToValueAtTime(.013*depth,t+.003);
  env.gain.exponentialRampToValueAtTime(.0001,t+.060);
  src.connect(filt).connect(env).connect(a.destination);src.start(t);src.stop(t+.072);
- pluck(190+90*(1-depth),.015*depth,.087,offset+.002);
+ pluck(196,.015*depth,.087,offset+.002);
 }
 function cloth(offset=0,depth=1){
  const a=audio();if(!a)return;const t=a.currentTime+offset;
@@ -225,10 +225,10 @@ function sfx(kind){
  if(kind!=='win'&&kind!=='press'&&kind!=='result'&&now-lastSound<50)return;
  lastSound=now;
  if(kind==='pick'){tapWood(0,.68);tapWood(.18,.27);cloth(.29,.8);tapWood(.32,.37)}
- else if(kind==='remove'){tapWood(0,.35);pluck(240,.008,.09)}
- else if(kind==='press'){tapWood(0,.85);cloth(.10,.6);pluck(174.61,.014,.20,.03)}
+ else if(kind==='remove'){tapWood(0,.35);pluck(261.63,.008,.09)}
+ else if(kind==='press'){tapWood(0,.85);cloth(.10,.6);pluck(261.63,.013,.20,.03)}
  else if(kind==='result'){pluck(329.63,.022,.16);pluck(392,.011,.17,.077)}
- else if(kind==='wrong'){tapWood(0,.38);pluck(220,.011,.13)}
+ else if(kind==='wrong'){tapWood(0,.38)}
  else if(kind==='select'){tapWood(0,.47)}
  else if(kind==='win'){tapWood(0,.48);pluck(261.63,.022,.36,.035);pluck(329.63,.020,.36,.12);pluck(392,.018,.38,.22);pluck(523.25,.015,.42,.34)}
 }
@@ -258,7 +258,7 @@ function loadStage(index,reshuffle=true){
  lastAnimalKey='';lastSlotsKey='';lastReceiptsKey='';
  GAME.stage=Math.max(0,Math.min(PUZZLES.length-1,index));
  if(reshuffle)PUZZLES[GAME.stage]=makeVariation(BASE_PUZZLES[GAME.stage]);
- GAME.selected=[];GAME.latest=null;GAME.used=false;GAME.phase='select';GAME.marked={};GAME.role=1;GAME.focus=[];GAME.failures=0;GAME.earnedStreak=false;
+ GAME.selected=[];GAME.latest=null;GAME.used=false;GAME.phase='select';GAME.marked={};GAME.role=1;GAME.focus=[];GAME.failures=0;GAME.lastMarked=-1;GAME.earnedStreak=false;
  GAME.streakEligible=GAME.stage===GAME.nextStreakStage&&!((GAME.completedMask|GAME.forfeitedMask)&(1<<GAME.stage));
  persist();render();
 }
@@ -355,10 +355,15 @@ function chooseAnimal(idx,origin=null){
   render();if(!had)animateToScale(idx,origin);
  }else if(GAME.phase==='guess'){
   const current=GAME.marked[idx]||0;
-  if(current===GAME.role){delete GAME.marked[idx];sfx('remove')}
+  if(current===GAME.role){delete GAME.marked[idx];GAME.lastMarked=-1;sfx('remove')}
   else{
-   if(Object.values(GAME.marked).filter(Boolean).length>=2&&!current){sfx('wrong');return}
-   GAME.marked[idx]=GAME.role;sfx('select');
+   if(Object.values(GAME.marked).filter(Boolean).length>=2&&!current){
+    const keys=Object.keys(GAME.marked).filter(k=>GAME.marked[k]);
+    const same=keys.find(k=>GAME.marked[k]===GAME.role);
+    const swap=same!==undefined?same:(GAME.lastMarked>=0&&GAME.marked[GAME.lastMarked]?String(GAME.lastMarked):keys[1]);
+    if(swap!==undefined)delete GAME.marked[swap];
+   }
+   GAME.marked[idx]=GAME.role;GAME.lastMarked=idx;sfx('select');
   }
   render();
  }
