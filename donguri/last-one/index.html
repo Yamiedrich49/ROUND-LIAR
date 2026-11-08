@@ -35,6 +35,82 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
 @media(max-width:360px){.app{padding-left:10px;padding-right:10px}.woodland{padding:13px 7px 11px}.animal .figure{height:66px}.name{font-size:10px}.said{min-width:28px;height:27px}.said b{font-size:15px}.said svg{height:11px;width:11px}.brand{font-size:15px}.receipt{min-height:79px}.receipt .faces svg{height:22px;width:22px}}
 @media(min-height:900px){.woodland{padding-top:20px;padding-bottom:18px}.animal .figure{height:92px}.path{height:26px}.scale{padding-top:16px;padding-bottom:14px}.slot{height:62px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Tactile atelier system */
+.app{background:linear-gradient(166deg,#faf8f2,#f4f1e9 72%,#f6f3ed)}
+.woodland{background:linear-gradient(164deg,#eff2e5,#e4edda 65%,#d9e6d0);border-color:#dfe7d9;box-shadow:0 8px 26px #354f4010,inset 0 1px #ffffffb8}
+.woodland:before{background:radial-gradient(ellipse 70% 30% at 50% 104%,#c6d8be7f,transparent 85%),radial-gradient(ellipse 70% 60% at 20% 0%,#fffdf54a,transparent)}
+.woodlabel{margin-bottom:8px}
+.animal{isolation:isolate}
+.animal .figure{position:relative;height:84px;transform-origin:50% 92%;will-change:transform}
+.animal .figure svg{max-width:76px}
+.animal.selected .figure{transform:translateY(-5px) scale(1.035)}
+.animal .held-pouch{filter:drop-shadow(0 2px 2px #59472b30)}
+.animal.selected .figure .held-pouch .knot{animation:bag-wiggle .38s ease-out;transform-origin:78px 75px}
+@keyframes bag-wiggle{0%,100%{transform:rotate(0)}40%{transform:rotate(-7deg)}70%{transform:rotate(4deg)}}
+.animal.selected .said{border-color:#699c84;background:#f6f9f1;box-shadow:0 0 0 1.5px #5d91771f}
+.animal.dragging{z-index:50;filter:drop-shadow(0 9px 9px #344d3833);cursor:grabbing}
+.animal.dragging .figure{transition:none!important}
+.select-number{background:#397b66;box-shadow:0 2px 5px #346b532a}
+.path{height:15px;margin:0 8%;border-bottom:1px solid #b1c5ad75}
+.workbench{margin-top:9px;opacity:1}
+.scale{padding:11px 12px 9px;overflow:visible;background:linear-gradient(160deg,#f0e7d8,#e5d7c2);border-color:#cbb89d;box-shadow:inset 0 1px #fffcf4,0 4px 0 #d0b897,0 8px 16px #665a4140}
+.scale:before{content:'';pointer-events:none;position:absolute;inset:4px;border:1px solid #ffffff75;border-radius:14px}
+.scale.drop-ready{border-color:#799c79;box-shadow:inset 0 1px #fffcf4,0 4px 0 #ceb493,0 0 0 3px #a0bd9552}
+.scale-slots{gap:12px;min-height:71px}
+.slot{width:72px;height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:13px;border:1px dashed #baa98f;background:#eee4d3a8;overflow:visible}
+.slot:not(.filled) .vacant{width:33px;height:40px;border:1px dashed #b4a288;border-radius:45% 45% 35% 35%;opacity:.37}
+.slot.filled{background:linear-gradient(180deg,#fcf8ed,#f5ebd9);border:1px solid #baa68a;box-shadow:inset 0 2px 8px #9d81681a}
+.weigh-bag{position:relative;width:36px;height:39px;border-radius:40% 40% 38% 38% / 35% 35% 42% 42%;background:linear-gradient(110deg,#c9a879,#e7d0a5 47%,#cfab7c);border:1px solid #b69565;box-shadow:inset 3px 0 5px #fff6e94a,0 2px 2px #816e5030;display:flex;justify-content:center;align-items:center}
+.weigh-bag:before{content:'';position:absolute;top:-4px;width:22px;height:9px;border-radius:48% 48% 30% 30%;background:#ac865a;box-shadow:inset 0 2px #e9d7b3}
+.weigh-bag:after{content:'';position:absolute;left:8px;right:8px;top:8px;bottom:5px;border-left:1px solid #fff5de69;border-right:1px solid #b8987152;border-radius:40%}
+.weigh-bag .bag-face{display:grid;place-items:center;z-index:1;width:23px;height:23px;border-radius:50%;background:#f8e8cb;border:1px solid #d2b895;overflow:hidden}
+.weigh-bag .bag-face svg{width:25px;height:25px;display:block}
+.slot-name{font-size:10px;line-height:1;font-weight:800;color:#76694f;white-space:nowrap}
+.slot-num{display:none}
+.scale-bottom{height:15px}
+.scale-bottom:before{height:5px;background:#977b58;box-shadow:0 1px #f7e5c0}
+.scale-bottom:after{background:#ba9b70}
+.scale.bump{animation:scale-weight .52s cubic-bezier(.22,.72,.25,1)}
+@keyframes scale-weight{0%{transform:translateY(0)}32%{transform:translateY(4px)}55%{transform:translateY(-1px)}77%{transform:translateY(1px)}100%{transform:translateY(0)}}
+.scale.bump .filled .weigh-bag{animation:bags-settle .48s ease-out}
+@keyframes bags-settle{0%{transform:translateY(-4px)}37%{transform:translateY(3px) scale(.98,1.02)}68%{transform:translateY(-1px)}100%{transform:none}}
+.measure-feedback{min-height:33px;margin-top:5px}
+.measure-feedback .value,.measure-feedback .diffpill{animation:readout .28s cubic-bezier(.22,.75,.3,1) both}
+@keyframes readout{from{transform:translateY(5px);opacity:.25}to{transform:translateY(0);opacity:1}}
+.value{border-color:#dccdb6;background:#fffaf0;padding:5px 12px}
+.diffpill{font-size:17px}
+.primary{background:#356f5c;box-shadow:0 4px 0 #245443,0 8px 13px #234b3428;border-radius:13px}
+.primary:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 #245443,0 3px 7px #234b3425}
+.go{margin:11px auto 0}
+.app.guessing .workbench{max-height:none;opacity:1;overflow:visible;margin-top:9px;pointer-events:auto}
+.app.guessing .path{height:15px}
+.app.guessing .woodland{padding-bottom:12px}
+.app.guessing .scalehint{display:none}
+.app.guessing .scale{padding-top:8px;padding-bottom:8px}
+.app.guessing .scale-slots{min-height:54px}
+.app.guessing .slot{height:55px}
+.app.guessing .weigh-bag{transform:scale(.82);margin-top:-2px}
+.app.guessing .slot-name{margin-top:-4px}
+.app.guessing .workheader{margin-bottom:5px}
+.records-head{margin-bottom:7px}
+.receipt{box-shadow:0 2px 7px #585b430a;border-color:#ddd8c9;background:linear-gradient(164deg,#fffcf5,#fcf7ed);border-radius:12px;min-height:84px}
+.receipt.active{background:#eff6ed;border-color:#85aa96;box-shadow:0 0 0 1px #8cac9660}
+.receipt.latest{border-color:#c9ad7f;background:#fff9eb;animation:card-new .33s cubic-bezier(.18,.72,.28,1) both}
+@keyframes card-new{from{opacity:.1;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.role-zone{padding-top:12px;animation:fadein .23s ease-out}
+.rolebutton{transition:background .14s,border-color .14s,transform .12s}
+.rolebutton:active{transform:scale(.975)}
+.flag{animation:stamp .19s cubic-bezier(.15,.75,.3,1.25) both}
+@keyframes stamp{from{transform:scale(.7);opacity:.25}to{transform:scale(1);opacity:1}}
+.banner{background:#eff4ea;border:1px solid #c7d9c7;border-radius:13px}
+.banner.warn{background:#faf2e9}
+.app.won .animal .figure{animation:soft-cheer .56s cubic-bezier(.2,.8,.26,1) both;animation-delay:calc(var(--i) * 55ms)}
+@keyframes soft-cheer{0%{transform:none}34%{transform:translateY(-7px) scale(1.04)}68%{transform:translateY(1px) scale(.99)}100%{transform:none}}
+.app.won .banner{animation:card-new .4s ease-out}
+@media(max-width:360px){.animal .figure{height:70px}.scale-slots{gap:7px;min-height:61px}.slot{width:62px;height:63px}.weigh-bag{transform:scale(.9)}.woodland{padding:12px 7px 11px}}
+@media(prefers-reduced-motion:reduce){.animal .figure,.weigh-bag,.receipt.latest,.flag,.measure-feedback .value,.measure-feedback .diffpill{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -51,7 +127,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
   <div class="path" aria-hidden="true"></div>
   <div class="workbench" id="workbench">
    <div class="workheader"><strong id="workTitle">さいごの 1回</strong><span class="onecoin"><i></i><span id="coinTxt">のこり 1回</span></span></div>
-   <div class="scale" id="scale"><div class="scale-slots" id="scaleSlots"></div><div class="scale-bottom" aria-hidden="true"></div><div class="measure-feedback" id="measureFeedback"></div></div>
+   <div class="scale" id="scale" aria-label="木のはかり台"><div class="scale-slots" id="scaleSlots"></div><div class="scale-bottom" aria-hidden="true"></div><div class="measure-feedback" id="measureFeedback" aria-live="polite"></div></div>
    <div class="scalehint" id="scaleHint">2匹の袋を えらんでね</div>
    <div class="go" id="goArea"><button class="primary" id="measureBtn" disabled>はかる</button></div>
   </div>
@@ -84,7 +160,10 @@ owl:`<path d="M20 48 25 19 39 37 50 20 61 37 77 19 81 48" fill="#7d978c"/><ellip
 lion:`<path d="M73 82Q99 82 89 50" fill="none" stroke="#b47a4d" stroke-width="6" stroke-linecap="round"/><path d="M85 49l10-4-2 12Z" fill="#8d6545"/><g fill="#b98655"><circle cx="29" cy="35" r="18"/><circle cx="50" cy="24" r="19"/><circle cx="71" cy="35" r="19"/><circle cx="76" cy="57" r="18"/><circle cx="64" cy="78" r="18"/><circle cx="38" cy="79" r="19"/><circle cx="23" cy="59" r="18"/></g><path d="M25 61Q23 31 51 29Q77 28 78 60Q72 83 50 84Q28 83 25 61" fill="#d7a568"/><ellipse cx="50" cy="86" rx="21" ry="18" fill="#bd8656"/><path d="M33 62Q50 55 67 62Q65 79 50 79Q35 79 33 62" fill="#f1dfbe"/><ellipse cx="41" cy="53" rx="3.6" ry="4.4" fill="#534538"/><ellipse cx="59" cy="53" rx="3.6" ry="4.4" fill="#534538"/><circle cx="42" cy="52" r="1.2" fill="white"/><circle cx="60" cy="52" r="1.2" fill="white"/><path d="M44 64Q50 60 56 64L50 69Z" fill="#8f6851"/><path d="M50 69v4m0 0q-5 3-8 0m8 0q5 3 8 0" fill="none" stroke="#a57a62" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="39" cy="94" rx="10" ry="6" fill="#b47b4e"/><ellipse cx="61" cy="94" rx="10" ry="6" fill="#b47b4e"/>`,
 deer:`<path d="M31 38L22 6 12 2m10 7 11-6m40 35 9-32 10-4m-10 7-11-6" fill="none" stroke="#917658" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 44Q11 24 10 34Q12 51 37 53" fill="#ad8c6b"/><path d="M70 44Q89 24 90 34Q88 51 63 53" fill="#ad8c6b"/><path d="M28 44Q18 31 16 36Q21 46 29 48" fill="#e7c5b5"/><path d="M72 44Q82 31 84 36Q79 46 71 48" fill="#e7c5b5"/><ellipse cx="50" cy="81" rx="25" ry="23" fill="#b68e67"/><path d="M40 70Q50 66 60 70L60 101H40Z" fill="#f0dfc7"/><path d="M25 55Q22 27 50 28Q78 27 75 55L68 75Q60 82 50 83Q40 82 32 75Z" fill="#bf996e"/><path d="M38 62Q50 67 62 62Q61 77 50 78Q39 77 38 62" fill="#f3e5cd"/><ellipse cx="40" cy="53" rx="3.4" ry="4.6" fill="#453d35"/><ellipse cx="60" cy="53" rx="3.4" ry="4.6" fill="#453d35"/><circle cx="41" cy="51" r="1.1" fill="white"/><circle cx="61" cy="51" r="1.1" fill="white"/><path d="M45 67Q50 63 55 67Q53 71 50 71Q47 71 45 67" fill="#6b5c4e"/><path d="M50 71v4m0 0q-4 3-7 0m7 0q4 3 7 0" stroke="#8e765f" stroke-width="1.4" fill="none" stroke-linecap="round"/><ellipse cx="34" cy="94" rx="9" ry="6" fill="#a78360"/><ellipse cx="66" cy="94" rx="9" ry="6" fill="#a78360"/>`
 };
-function portrait(i,cls=''){return `<svg class="${cls}" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="50" cy="104" rx="30" ry="5" fill="#547a6417"/>${Object.values(PORTRAITS)[i]}</svg>`}
+function portrait(i,cls=''){
+ const bag=cls==='live'?'<g class="held-pouch"><path d="M71 74Q75 68 82 74Q91 85 84 97Q78 101 71 96Q66 87 71 74Z" fill="#d7b88b" stroke="#b28f62" stroke-width="1.4"/><path d="M72 78Q78 81 85 77" fill="none" stroke="#f6e4c1" stroke-width="1.4"/><path class="knot" d="M72 74l-1-6 5 2 4-3 3 7-5 3Z" fill="#b99365"/><path d="M75 87l4-2 2 4-4 2Z" fill="#f0ddb6" opacity=".75"/></g>':'';
+ return `<svg class="${cls}" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="50" cy="105" rx="30" ry="4.5" fill="#446d5418"/>${Object.values(PORTRAITS)[i]}${bag}</svg>`;
+}
 function acornIcon(){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-4 0-6 3-6 6 0 4 2 8 6 8s6-4 6-8c0-3-2-6-6-6Z" fill="#bd885c"/><path d="M5 10c.1-3 3-5 7-5s6.9 2 7 5H5Z" fill="#8b644c"/><path d="M12 6V3m0 2c-2-2-4-2-6-1" stroke="#6e8f5f" stroke-width="2" stroke-linecap="round"/></svg>`}
 function soundIcon(on){return on?`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Zm8-2a6 6 0 0 1 0 10m2-13a10 10 0 0 1 0 16"/></svg>`:`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Z M15 9l6 6m0-6-6 6"/></svg>`}
 
@@ -125,13 +204,19 @@ function loadStage(index,reshuffle=true){
 }
 function receipts(p){return GAME.latest?[...p.clues,GAME.latest]:p.clues}
 function labelSigned(v){return v>0?`＋${v}`:v<0?`−${-v}`:'0'}
-function fillScale(p){const n=GAME.phase==='select'?GAME.selected.length:(GAME.latest?.group.length||0),indices=GAME.phase==='select'?GAME.selected:(GAME.latest?.group||[]);return Array.from({length:3},(_,j)=>{let id=indices[j];return `<div class="slot ${id===undefined?'':'filled'}" data-slot="${j}" aria-label="${id===undefined?'空き':NAMES[id]}">${id===undefined?'＋':portrait(id)}<span class="slot-num">${j+1}</span></div>`}).join('')}
-function animalHtml(p,i){let selected=GAME.selected.indexOf(i),mark=GAME.marked[i]||0,flag=GAME.phase==='guess'||GAME.phase==='win'?(mark?`<span class="flag ${mark>0?'plus':'minus'}">${mark>0?'+1':'−1'}</span>`:''):(selected>=0?`<span class="select-number">${selected+1}</span>`:'');const ghost=(GAME.phase==='select'&&selected>=0);return `<button class="animal ${ghost?'selected':''} ${(GAME.phase==='measuring')?'muted':''}" data-animal="${i}" aria-label="${NAMES[i]}、言った数${p.said[i]}。${ghost?'えらんだ':''}"><span class="figure">${portrait(i)}</span><span class="name">${NAMES[i]}</span><span class="said">${acornIcon()}<b>${p.said[i]}</b></span>${flag}</button>`}
+function fillScale(p){
+ const indices=GAME.phase==='select'?GAME.selected:(GAME.latest?.group||GAME.selected);
+ return Array.from({length:3},(_,j)=>{
+ const id=indices[j],filled=id!==undefined;
+ return `<div class="slot ${filled?'filled':''}" data-slot="${j}" data-animal="${filled?id:''}" aria-label="${filled?NAMES[id]+'の袋':'空き'}">${filled?`<span class="weigh-bag"><span class="bag-face">${portrait(id)}</span></span><span class="slot-name">${NAMES[id]}</span>`:'<span class="vacant"></span>'}</div>`;
+ }).join('');
+}
+function animalHtml(p,i){let selected=GAME.selected.indexOf(i),mark=GAME.marked[i]||0,flag=GAME.phase==='guess'||GAME.phase==='win'?(mark?`<span class="flag ${mark>0?'plus':'minus'}">${mark>0?'+1':'−1'}</span>`:''):(selected>=0?`<span class="select-number">${selected+1}</span>`:'');const ghost=(GAME.phase==='select'&&selected>=0);return `<button class="animal ${ghost?'selected':''} ${(GAME.phase==='measuring')?'muted':''}" data-animal="${i}" style="--i:${i}" aria-label="${NAMES[i]}、言った数${p.said[i]}。${ghost?'えらんだ':''}"><span class="figure">${portrait(i,'live')}</span><span class="name">${NAMES[i]}</span><span class="said">${acornIcon()}<b>${p.said[i]}</b></span>${flag}</button>`}
 function receiptHtml(p,r,i){const sa=r.group.reduce((s,j)=>s+p.said[j],0);const real=sa-r.diff,active=GAME.focus.includes(i);return `<button class="receipt ${active?'active':''} ${i===p.clues.length?'latest':''}" data-receipt="${i}" aria-label="${r.group.map(j=>NAMES[j]).join('と')}、言った数${sa}、はかった数${real}"><div class="faces">${r.group.map((k,j)=>`${j?'<span class="join">＋</span>':''}${portrait(k)}`).join('')}</div><div class="names">${r.group.map(k=>NAMES[k]).join('・')}</div><div class="totals"><span class="nums">${sa} → ${real}</span><strong class="${r.diff>0?'pos':r.diff<0?'neg':''}">${labelSigned(r.diff)}</strong></div></button>`}
-function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME.phase==='win';document.querySelector('.app').classList.toggle('guessing',atGuess);$('stageIndex').textContent=String(GAME.stage+1).padStart(2,'0')+' / '+String(PUZZLES.length).padStart(2,'0');$('streakNow').textContent=GAME.streak;$('streakBest').textContent=GAME.best;$('prevStage').disabled=GAME.stage===0;$('nextStage').disabled=GAME.stage>=GAME.unlocked||GAME.stage>=PUZZLES.length-1;
+function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME.phase==='win';document.querySelector('.app').classList.toggle('guessing',atGuess);document.querySelector('.app').classList.toggle('won',GAME.phase==='win');$('stageIndex').textContent=String(GAME.stage+1).padStart(2,'0')+' / '+String(PUZZLES.length).padStart(2,'0');$('streakNow').textContent=GAME.streak;$('streakBest').textContent=GAME.best;$('prevStage').disabled=GAME.stage===0;$('nextStage').disabled=GAME.stage>=GAME.unlocked||GAME.stage>=PUZZLES.length-1;
  $('stageRule').innerHTML=p.mode==='opposite'?'<strong>おおめ＋1</strong> · <strong>ひかえめ−1</strong>':'<strong>ちがう子2匹</strong> · 同じタイプもあり';
  $('soundBtn').innerHTML=soundIcon(soundOn);$('stageLabel').textContent=GAME.phase==='win'?'みごと、見破ったね':atGuess?'さいごの ひと推理':'さいごの 1回を えらぼう';$('selectHint').textContent=atGuess?'しるしを つけよう':`2匹 または 3匹`; $('animals').style.setProperty('--n',p.n);$('animals').innerHTML=Array.from({length:p.n},(_,i)=>animalHtml(p,i)).join('');
- $('workTitle').textContent=GAME.phase==='select'?'木の はかり台':GAME.phase==='measuring'?'はかっているよ':GAME.phase==='win'?'わかった！':'さいごの はかり';$('coinTxt').textContent=GAME.used?'のこり 0回':'のこり 1回';$('scaleSlots').innerHTML=fillScale(p);
+ $('workTitle').textContent=GAME.phase==='select'?'木の はかり台':GAME.phase==='measuring'?'はかっているよ':GAME.phase==='win'?'わかった！':'はかりの こたえ';$('coinTxt').textContent=GAME.used?'のこり 0回':'のこり 1回';$('scaleSlots').innerHTML=fillScale(p);
  const feed=$('measureFeedback'); if(GAME.latest){let r=GAME.latest,sa=r.group.reduce((s,j)=>s+p.said[j],0);feed.innerHTML=`<span class="value"><span class="small">言った数</span>${sa}</span><span style="color:#a4a38e">→</span><span class="value"><span class="small">はかった数</span>${sa-r.diff}</span><span class="diffpill ${r.diff>0?'pos':r.diff<0?'neg':''}">${labelSigned(r.diff)}</span>`}else{feed.innerHTML='<span style="color:#8c9988;font-size:12px">袋を2つか3つ、台にのせよう</span>'}
  $('goArea').hidden=GAME.phase!=='select';$('measureBtn').disabled=GAME.selected.length<2||GAME.selected.length>3;$('measureBtn').textContent=GAME.selected.length>=2?`${GAME.selected.length}匹を はかる`:'はかる';
  $('scaleHint').textContent=GAME.phase==='select'?(GAME.selected.length<2?'動物をタップ、または袋をドラッグ':`${GAME.selected.length}匹 えらんだよ · もう1回タップで もどす`):GAME.phase==='measuring'?'ことん……':GAME.phase==='win'?'みんなの袋を あけてみよう':'木ふだを見ながら かんがえてね';
