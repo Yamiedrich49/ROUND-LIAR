@@ -277,10 +277,20 @@ let lastAnimalKey='',lastSlotsKey='',lastReceiptsKey='';
 function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME.phase==='win';document.querySelector('.app').classList.toggle('guessing',atGuess);document.querySelector('.app').classList.toggle('won',GAME.phase==='win');$('stageIndex').textContent=String(GAME.stage+1).padStart(2,'0')+' / '+String(PUZZLES.length).padStart(2,'0');$('streakNow').textContent=GAME.streak;$('streakBest').textContent=GAME.best;$('prevStage').disabled=GAME.stage===0;$('nextStage').disabled=GAME.stage>=GAME.unlocked||GAME.stage>=PUZZLES.length-1;
  $('stageRule').innerHTML=p.mode==='opposite'?'<strong>おおめ＋1</strong> · <strong>ひかえめ−1</strong>':'<strong>ちがう子2匹</strong> · 同じタイプもあり';
  $('soundBtn').innerHTML=soundIcon(soundOn);$('stageLabel').textContent=GAME.phase==='win'?'みごと、見破ったね':atGuess?'さいごの ひと推理':'さいごの 1回を えらぼう';$('selectHint').textContent=atGuess?'しるしを つけよう':`2匹 または 3匹`; $('animals').style.setProperty('--n',p.n);
- const animalKey=GAME.stage+'|'+GAME.phase+'|'+GAME.selected.join(',')+'|'+JSON.stringify(GAME.marked);
+ const animalKey=GAME.stage+'|'+GAME.phase+'|'+JSON.stringify(GAME.marked);
  if(animalKey!==lastAnimalKey){
   $('animals').innerHTML=Array.from({length:p.n},(_,i)=>animalHtml(p,i)).join('');
   lastAnimalKey=animalKey;
+ }else if(GAME.phase==='select'){
+  $('animals').querySelectorAll('.animal').forEach(btn=>{
+   const i=Number(btn.dataset.animal),order=GAME.selected.indexOf(i);
+   btn.classList.toggle('selected',order>=0);
+   let num=btn.querySelector('.select-number');
+   if(order>=0){
+    if(!num){num=document.createElement('span');num.className='select-number';btn.appendChild(num)}
+    num.textContent=String(order+1);
+   }else if(num)num.remove();
+  });
  }
  $('workTitle').textContent=GAME.phase==='select'?'木の はかり台':GAME.phase==='measuring'?'はかっているよ':GAME.phase==='win'?'わかった！':'はかりの こたえ';$('coinTxt').textContent=GAME.used?'のこり 0回':'のこり 1回';const indices=GAME.phase==='select'?GAME.selected:(GAME.latest?.group||GAME.selected);
  const slotsKey=GAME.stage+'|'+indices.join(',')+'|'+(GAME.latest?.diff??'');
@@ -301,7 +311,7 @@ function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME
  
  if(GAME.phase==='win'){$('banner').className='banner';$('banner').innerHTML=`<span class="title">見つけた！</span>${GAME.earnedStreak?`<b>${GAME.streak}問れんぞく正解！</b>`:`みんなの正体がわかったね。`} <div class="answer-proof" style="--n:${p.n}">${Array.from({length:p.n},(_,i)=>`<div class="proof-row">${portrait(i)}<span>${NAMES[i]}</span><strong>${p.said[i]} → ${p.said[i]-p.actual[i]}</strong></div>`).join('')}</div><div class="result-actions"><button class="primary" id="stageForward">${GAME.stage===PUZZLES.length-1?'もう一度 あそぶ':'つぎの もんだい'}</button></div>`}
  const activeIds=new Set(GAME.focus.flatMap(i=>(receipts(p)[i]||{group:[]}).group));
- document.querySelectorAll('[data-animal]').forEach(btn=>{
+ $('animals').querySelectorAll('.animal').forEach(btn=>{
   const j=+btn.dataset.animal;
   if(GAME.focus.length){
    btn.style.filter=activeIds.has(j)?'drop-shadow(0 2px 5px #c8a16445)':'grayscale(.65)';
@@ -340,6 +350,8 @@ function chooseAnimal(idx,origin=null){
   if(had){GAME.selected=GAME.selected.filter(i=>i!==idx);sfx('remove')}
   else if(GAME.selected.length<3){GAME.selected.push(idx);sfx('pick')}
   else{sfx('wrong');return}
+  const live=$('animals').querySelector('[data-animal="'+idx+'"]');
+  if(live){live.classList.remove('dragging');live.querySelector('.figure')?.style.removeProperty('transform')}
   render();if(!had)animateToScale(idx,origin);
  }else if(GAME.phase==='guess'){
   const current=GAME.marked[idx]||0;
