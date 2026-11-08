@@ -47,6 +47,9 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
 .animal.selected .figure{transform:translateY(-5px) scale(1.035)}
 .animal.selected .held-pouch{opacity:0}
 .animal.walking .held-pouch{opacity:1}
+.animal.walking .portrait-figure{transform-origin:50px 96px;animation:gait .19s ease-in-out infinite alternate}
+@keyframes gait{from{transform:rotate(-1.8deg) translateY(-1px)}to{transform:rotate(1.8deg) translateY(1px)}}
+@media(prefers-reduced-motion:reduce){.animal.walking .portrait-figure{animation:none}}
 .animal .held-pouch{filter:drop-shadow(0 2px 2px #59472b30)}
 .animal.selected .figure .held-pouch .knot{animation:bag-wiggle .38s ease-out;transform-origin:78px 75px}
 @keyframes bag-wiggle{0%,100%{transform:rotate(0)}40%{transform:rotate(-7deg)}70%{transform:rotate(4deg)}}
@@ -164,7 +167,7 @@ deer:`<path d="M31 38L22 6 12 2m10 7 11-6m40 35 9-32 10-4m-10 7-11-6" fill="none
 };
 function portrait(i,cls=''){
  const bag=cls==='live'?'<g class="held-pouch"><path d="M71 74Q75 68 82 74Q91 85 84 97Q78 101 71 96Q66 87 71 74Z" fill="#d7b88b" stroke="#b28f62" stroke-width="1.4"/><path d="M72 78Q78 81 85 77" fill="none" stroke="#f6e4c1" stroke-width="1.4"/><path class="knot" d="M72 74l-1-6 5 2 4-3 3 7-5 3Z" fill="#b99365"/><path d="M75 87l4-2 2 4-4 2Z" fill="#f0ddb6" opacity=".75"/></g>':'';
- return `<svg class="${cls}" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="50" cy="105" rx="30" ry="4.5" fill="#446d5418"/>${Object.values(PORTRAITS)[i]}${bag}</svg>`;
+ return `<svg class="${cls}" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="50" cy="105" rx="30" ry="4.5" fill="#446d5418"/><g class="portrait-figure">${Object.values(PORTRAITS)[i]}</g>${bag}</svg>`;
 }
 function acornIcon(){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-4 0-6 3-6 6 0 4 2 8 6 8s6-4 6-8c0-3-2-6-6-6Z" fill="#bd885c"/><path d="M5 10c.1-3 3-5 7-5s6.9 2 7 5H5Z" fill="#8b644c"/><path d="M12 6V3m0 2c-2-2-4-2-6-1" stroke="#6e8f5f" stroke-width="2" stroke-linecap="round"/></svg>`}
 function soundIcon(on){return on?`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Zm8-2a6 6 0 0 1 0 10m2-13a10 10 0 0 1 0 16"/></svg>`:`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Z M15 9l6 6m0-6-6 6"/></svg>`}
@@ -219,7 +222,7 @@ function cloth(offset=0,depth=1){
 function sfx(kind){
  if(!soundOn)return;
  const now=performance.now();
- if(kind!=='win'&&now-lastSound<50)return;
+ if(kind!=='win'&&kind!=='press'&&kind!=='result'&&now-lastSound<50)return;
  lastSound=now;
  if(kind==='pick'){tapWood(0,.68);tapWood(.18,.27);cloth(.29,.8);tapWood(.32,.37)}
  else if(kind==='remove'){tapWood(0,.35);pluck(240,.008,.09)}
@@ -252,6 +255,7 @@ function initial(){
 }
 function persist(){try{localStorage.setItem('donguri_last_one_progress',JSON.stringify({unlocked:GAME.unlocked,stage:GAME.stage,streak:GAME.streak,best:GAME.best,cycle:GAME.cycle,completedMask:GAME.completedMask,forfeitedMask:GAME.forfeitedMask,nextStreakStage:GAME.nextStreakStage}))}catch(e){}}
 function loadStage(index,reshuffle=true){
+ lastAnimalKey='';lastSlotsKey='';lastReceiptsKey='';
  GAME.stage=Math.max(0,Math.min(PUZZLES.length-1,index));
  if(reshuffle)PUZZLES[GAME.stage]=makeVariation(BASE_PUZZLES[GAME.stage]);
  GAME.selected=[];GAME.latest=null;GAME.used=false;GAME.phase='select';GAME.marked={};GAME.role=1;GAME.focus=[];GAME.failures=0;GAME.earnedStreak=false;
@@ -269,19 +273,41 @@ function fillScale(p){
 }
 function animalHtml(p,i){let selected=GAME.selected.indexOf(i),mark=GAME.marked[i]||0,flag=GAME.phase==='guess'||GAME.phase==='win'?(mark?`<span class="flag ${mark>0?'plus':'minus'}">${mark>0?'+1':'−1'}</span>`:''):(selected>=0?`<span class="select-number">${selected+1}</span>`:'');const ghost=(GAME.phase==='select'&&selected>=0);return `<button class="animal ${ghost?'selected':''} ${(GAME.phase==='measuring')?'muted':''}" data-animal="${i}" style="--i:${i}" aria-label="${NAMES[i]}、言った数${p.said[i]}。${ghost?'えらんだ':''}"><span class="figure">${portrait(i,'live')}</span><span class="name">${NAMES[i]}</span><span class="said">${acornIcon()}<b>${p.said[i]}</b></span>${flag}</button>`}
 function receiptHtml(p,r,i){const sa=r.group.reduce((s,j)=>s+p.said[j],0);const real=sa-r.diff,active=GAME.focus.includes(i);return `<button class="receipt ${active?'active':''} ${i===p.clues.length?'latest':''}" data-receipt="${i}" aria-label="${r.group.map(j=>NAMES[j]).join('と')}、言った数${sa}、はかった数${real}"><div class="faces">${r.group.map((k,j)=>`${j?'<span class="join">＋</span>':''}${portrait(k)}`).join('')}</div><div class="names">${r.group.map(k=>NAMES[k]).join('・')}</div><div class="totals"><span class="nums">${sa} → ${real}</span><strong class="${r.diff>0?'pos':r.diff<0?'neg':''}">${labelSigned(r.diff)}</strong></div></button>`}
+let lastAnimalKey='',lastSlotsKey='',lastReceiptsKey='';
 function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME.phase==='win';document.querySelector('.app').classList.toggle('guessing',atGuess);document.querySelector('.app').classList.toggle('won',GAME.phase==='win');$('stageIndex').textContent=String(GAME.stage+1).padStart(2,'0')+' / '+String(PUZZLES.length).padStart(2,'0');$('streakNow').textContent=GAME.streak;$('streakBest').textContent=GAME.best;$('prevStage').disabled=GAME.stage===0;$('nextStage').disabled=GAME.stage>=GAME.unlocked||GAME.stage>=PUZZLES.length-1;
  $('stageRule').innerHTML=p.mode==='opposite'?'<strong>おおめ＋1</strong> · <strong>ひかえめ−1</strong>':'<strong>ちがう子2匹</strong> · 同じタイプもあり';
- $('soundBtn').innerHTML=soundIcon(soundOn);$('stageLabel').textContent=GAME.phase==='win'?'みごと、見破ったね':atGuess?'さいごの ひと推理':'さいごの 1回を えらぼう';$('selectHint').textContent=atGuess?'しるしを つけよう':`2匹 または 3匹`; $('animals').style.setProperty('--n',p.n);$('animals').innerHTML=Array.from({length:p.n},(_,i)=>animalHtml(p,i)).join('');
- $('workTitle').textContent=GAME.phase==='select'?'木の はかり台':GAME.phase==='measuring'?'はかっているよ':GAME.phase==='win'?'わかった！':'はかりの こたえ';$('coinTxt').textContent=GAME.used?'のこり 0回':'のこり 1回';$('scaleSlots').innerHTML=fillScale(p);
+ $('soundBtn').innerHTML=soundIcon(soundOn);$('stageLabel').textContent=GAME.phase==='win'?'みごと、見破ったね':atGuess?'さいごの ひと推理':'さいごの 1回を えらぼう';$('selectHint').textContent=atGuess?'しるしを つけよう':`2匹 または 3匹`; $('animals').style.setProperty('--n',p.n);
+ const animalKey=GAME.stage+'|'+GAME.phase+'|'+GAME.selected.join(',')+'|'+JSON.stringify(GAME.marked);
+ if(animalKey!==lastAnimalKey){
+  $('animals').innerHTML=Array.from({length:p.n},(_,i)=>animalHtml(p,i)).join('');
+  lastAnimalKey=animalKey;
+ }
+ $('workTitle').textContent=GAME.phase==='select'?'木の はかり台':GAME.phase==='measuring'?'はかっているよ':GAME.phase==='win'?'わかった！':'はかりの こたえ';$('coinTxt').textContent=GAME.used?'のこり 0回':'のこり 1回';const indices=GAME.phase==='select'?GAME.selected:(GAME.latest?.group||GAME.selected);
+ const slotsKey=GAME.stage+'|'+indices.join(',')+'|'+(GAME.latest?.diff??'');
+ if(slotsKey!==lastSlotsKey){$('scaleSlots').innerHTML=fillScale(p);lastSlotsKey=slotsKey;}
  const feed=$('measureFeedback'); if(GAME.latest){let r=GAME.latest,sa=r.group.reduce((s,j)=>s+p.said[j],0);feed.innerHTML=`<span class="value"><span class="small">言った数</span>${sa}</span><span style="color:#a4a38e">→</span><span class="value"><span class="small">はかった数</span>${sa-r.diff}</span><span class="diffpill ${r.diff>0?'pos':r.diff<0?'neg':''}">${labelSigned(r.diff)}</span>`}else{feed.innerHTML='<span style="color:#8c9988;font-size:12px">袋を2つか3つ、台にのせよう</span>'}
  $('goArea').hidden=GAME.phase!=='select';$('measureBtn').disabled=GAME.selected.length<2||GAME.selected.length>3;$('measureBtn').textContent=GAME.selected.length>=2?`${GAME.selected.length}匹を はかる`:'はかる';
  $('scaleHint').textContent=GAME.phase==='select'?(GAME.selected.length<2?'動物をタップ、または袋をドラッグ':`${GAME.selected.length}匹 えらんだよ · もう1回タップで もどす`):GAME.phase==='measuring'?'ことん……':GAME.phase==='win'?'みんなの袋を あけてみよう':'木ふだを見ながら かんがえてね';
- $('receiptGrid').innerHTML=receipts(p).map((r,i)=>receiptHtml(p,r,i)).join('');$('roleZone').hidden=!atGuess;$('banner').hidden=!(GAME.phase==='win'||GAME.phase==='guess');
+ const receiptsKey=GAME.stage+'|'+(GAME.latest?.group.join(',')||'')+'|'+(GAME.latest?.diff??'');
+ if(receiptsKey!==lastReceiptsKey){
+  $('receiptGrid').innerHTML=receipts(p).map((r,i)=>receiptHtml(p,r,i)).join('');
+  lastReceiptsKey=receiptsKey;
+ }else{
+  $('receiptGrid').querySelectorAll('[data-receipt]').forEach(b=>b.classList.toggle('active',GAME.focus.includes(Number(b.dataset.receipt))));
+ }
+ $('roleZone').hidden=!atGuess;$('banner').hidden=!(GAME.phase==='win'||GAME.phase==='guess');
  if(atGuess){document.querySelectorAll('[data-role]').forEach(b=>{const role=Number(b.dataset.role);b.classList.toggle('active',GAME.role===role)});let marked=Object.values(GAME.marked).filter(Boolean);$('roleHelp').textContent=p.mode==='opposite'?'多めを1匹・ひかえめを1匹、それぞれ えらんでね':'多め2匹でも、ひかえめ2匹でも いいよ';$('answerBtn').disabled=marked.length!==2||(p.mode==='opposite'&&!(marked.includes(1)&&marked.includes(-1)));}
  if(GAME.phase==='guess'){$('banner').className='banner';$('banner').innerHTML='木ふだを見ながら、ちがう数を言った2匹を見つけよう。'}
  
  if(GAME.phase==='win'){$('banner').className='banner';$('banner').innerHTML=`<span class="title">見つけた！</span>${GAME.earnedStreak?`<b>${GAME.streak}問れんぞく正解！</b>`:`みんなの正体がわかったね。`} <div class="answer-proof" style="--n:${p.n}">${Array.from({length:p.n},(_,i)=>`<div class="proof-row">${portrait(i)}<span>${NAMES[i]}</span><strong>${p.said[i]} → ${p.said[i]-p.actual[i]}</strong></div>`).join('')}</div><div class="result-actions"><button class="primary" id="stageForward">${GAME.stage===PUZZLES.length-1?'もう一度 あそぶ':'つぎの もんだい'}</button></div>`}
- const activeIds=new Set(GAME.focus.flatMap(i=>(receipts(p)[i]||{group:[]}).group)); if(GAME.focus.length){document.querySelectorAll('[data-animal]').forEach(btn=>{let j=+btn.dataset.animal;btn.style.filter=activeIds.has(j)?'drop-shadow(0 2px 5px #c8a16445)':'grayscale(.65)';btn.style.opacity=activeIds.has(j)?'1':'.76';});}
+ const activeIds=new Set(GAME.focus.flatMap(i=>(receipts(p)[i]||{group:[]}).group));
+ document.querySelectorAll('[data-animal]').forEach(btn=>{
+  const j=+btn.dataset.animal;
+  if(GAME.focus.length){
+   btn.style.filter=activeIds.has(j)?'drop-shadow(0 2px 5px #c8a16445)':'grayscale(.65)';
+   btn.style.opacity=activeIds.has(j)?'1':'.76';
+  }else{btn.style.removeProperty('filter');btn.style.removeProperty('opacity')}
+ });
 }
 function animateToScale(index,origin=null){
  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -332,7 +358,7 @@ function measure(){
  setTimeout(()=>{
   if(GAME.phase!=='measuring')return;
   GAME.latest={group,diff:diff(p.actual,group)};GAME.used=true;GAME.phase='guess';sfx('result');
-  GAME.focus=[];render();
+  GAME.focus=[];$('scale').classList.remove('bump');render();
  },520);
 }
 function submit(){
