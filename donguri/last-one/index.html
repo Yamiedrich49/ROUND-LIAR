@@ -88,7 +88,7 @@ function portrait(i,cls=''){return `<svg class="${cls}" viewBox="0 0 100 112" xm
 function acornIcon(){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-4 0-6 3-6 6 0 4 2 8 6 8s6-4 6-8c0-3-2-6-6-6Z" fill="#bd885c"/><path d="M5 10c.1-3 3-5 7-5s6.9 2 7 5H5Z" fill="#8b644c"/><path d="M12 6V3m0 2c-2-2-4-2-6-1" stroke="#6e8f5f" stroke-width="2" stroke-linecap="round"/></svg>`}
 function soundIcon(on){return on?`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Zm8-2a6 6 0 0 1 0 10m2-13a10 10 0 0 1 0 16"/></svg>`:`<svg viewBox="0 0 24 24"><path d="M5 9H2v6h3l5 4V5L5 9Z M15 9l6 6m0-6-6 6"/></svg>`}
 
-const GAME={stage:0,unlocked:0,selected:[],used:false,phase:'select',latest:null,marked:{},role:1,focus:[],failures:0,streak:0,best:0,cycle:0,completedMask:0,forfeitedMask:0,streakEligible:true,earnedStreak:false};
+const GAME={stage:0,unlocked:0,selected:[],used:false,phase:'select',latest:null,marked:{},role:1,focus:[],failures:0,streak:0,best:0,cycle:0,completedMask:0,forfeitedMask:0,nextStreakStage:0,streakEligible:true,earnedStreak:false};
 const $=id=>document.getElementById(id);
 let soundOn=localStorage.getItem('donguri_last_one_sound')!=='off';let ctx=null;let lastSound=0;
 function audio(){if(!soundOn)return null;try{if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx}catch(e){return null}}
@@ -109,15 +109,18 @@ function initial(){
   GAME.cycle=Math.max(0,Math.floor(Number(obj.cycle)||0));
   GAME.completedMask=('completedMask' in obj)?(Number(obj.completedMask)||0):((1<<GAME.unlocked)-1);
   GAME.forfeitedMask=Number(obj.forfeitedMask)||0;
+  let firstUnfinished=0;
+  while(firstUnfinished<PUZZLES.length&&(GAME.completedMask&(1<<firstUnfinished)))firstUnfinished++;
+  GAME.nextStreakStage=('nextStreakStage' in obj)?Math.max(0,Math.min(PUZZLES.length,Math.floor(Number(obj.nextStreakStage)||0))):firstUnfinished;
  }catch(e){}
  loadStage(GAME.stage);
 }
-function persist(){try{localStorage.setItem('donguri_last_one_progress',JSON.stringify({unlocked:GAME.unlocked,stage:GAME.stage,streak:GAME.streak,best:GAME.best,cycle:GAME.cycle,completedMask:GAME.completedMask,forfeitedMask:GAME.forfeitedMask}))}catch(e){}}
+function persist(){try{localStorage.setItem('donguri_last_one_progress',JSON.stringify({unlocked:GAME.unlocked,stage:GAME.stage,streak:GAME.streak,best:GAME.best,cycle:GAME.cycle,completedMask:GAME.completedMask,forfeitedMask:GAME.forfeitedMask,nextStreakStage:GAME.nextStreakStage}))}catch(e){}}
 function loadStage(index,reshuffle=true){
  GAME.stage=Math.max(0,Math.min(PUZZLES.length-1,index));
  if(reshuffle)PUZZLES[GAME.stage]=makeVariation(BASE_PUZZLES[GAME.stage]);
  GAME.selected=[];GAME.latest=null;GAME.used=false;GAME.phase='select';GAME.marked={};GAME.role=1;GAME.focus=[];GAME.failures=0;GAME.earnedStreak=false;
- GAME.streakEligible=!((GAME.completedMask|GAME.forfeitedMask)&(1<<GAME.stage));
+ GAME.streakEligible=GAME.stage===GAME.nextStreakStage&&!((GAME.completedMask|GAME.forfeitedMask)&(1<<GAME.stage));
  persist();render();
 }
 function receipts(p){return GAME.latest?[...p.clues,GAME.latest]:p.clues}
@@ -150,6 +153,7 @@ function submit(){
   GAME.earnedStreak=GAME.streakEligible;
   if(GAME.earnedStreak){GAME.streak++;GAME.best=Math.max(GAME.best,GAME.streak)}
   GAME.completedMask|=1<<GAME.stage;
+  if(GAME.stage===GAME.nextStreakStage)GAME.nextStreakStage=Math.min(PUZZLES.length,GAME.stage+1);
   GAME.phase='win';GAME.unlocked=Math.max(GAME.unlocked,Math.min(PUZZLES.length-1,GAME.stage+1));
   persist();sfx('win');render();$('banner').scrollIntoView({block:'nearest',behavior:'smooth'});
  }else{
@@ -168,7 +172,7 @@ $('animals').addEventListener('pointercancel',()=>{pointer?.ghost?.remove();poin
 $('scaleSlots').addEventListener('click',e=>{if(GAME.phase!=='select')return;let s=e.target.closest('[data-slot]');if(!s)return;let i=GAME.selected[Number(s.dataset.slot)];if(i!==undefined)chooseAnimal(i)});
 $('receiptGrid').addEventListener('click',e=>{let b=e.target.closest('[data-receipt]');if(!b)return;const id=+b.dataset.receipt;if(GAME.focus.includes(id)){GAME.focus=GAME.focus.filter(v=>v!==id)}else{if(GAME.focus.length>=2)GAME.focus.shift();GAME.focus.push(id)}sfx('select');render()});
 $('roleZone').addEventListener('click',e=>{const b=e.target.closest('[data-role]');if(b){GAME.role=Number(b.dataset.role);sfx('select');render()}});
-$('banner').addEventListener('click',e=>{if(e.target.closest('#stageForward')){if(GAME.stage<PUZZLES.length-1)loadStage(GAME.stage+1);else{GAME.cycle++;GAME.completedMask=0;GAME.forfeitedMask=0;loadStage(0)}}});
+$('banner').addEventListener('click',e=>{if(e.target.closest('#stageForward')){if(GAME.stage<PUZZLES.length-1)loadStage(GAME.stage+1);else{GAME.cycle++;GAME.completedMask=0;GAME.forfeitedMask=0;GAME.nextStreakStage=0;loadStage(0)}}});
 window.__donguriTest={getState:()=>JSON.parse(JSON.stringify(GAME)),allHypotheses,candidates,certainty,loadStage,chooseAnimal,measure,submit,PUZZLES};
 initial();
 </script>
