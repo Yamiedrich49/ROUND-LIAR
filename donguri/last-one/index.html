@@ -116,6 +116,17 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
 @media(max-width:360px){.animal .figure{height:70px}.scale-slots{gap:7px;min-height:61px}.slot{width:62px;height:63px}.weigh-bag{transform:scale(.9)}.woodland{padding:12px 7px 11px}}
 @media(prefers-reduced-motion:reduce){.animal .figure,.weigh-bag,.receipt.latest,.flag,.measure-feedback .value,.measure-feedback .diffpill{animation:none!important;transition:none!important}}
 
+
+/* Keep suspects and verdict controls in the same sightline */
+.woodland .role-zone{padding:8px 5px 4px;animation:fadein .22s ease-out}
+.woodland .role-title{font-size:12px;color:#5d7568;letter-spacing:.015em;font-weight:750;margin:0 0 7px}
+.woodland .role-choices{gap:7px}
+.woodland .rolebutton{min-height:42px;border-radius:11px;background:#fffdf6cc}
+.woodland .rolebutton strong{font-size:17px}
+.woodland .rolehelp{display:none}
+.woodland #answerBtn{margin-top:8px;padding:9px 12px;font-size:14px;box-shadow:0 3px 0 #245443,0 6px 11px #234b3425}
+.woodland #answerBtn:disabled{box-shadow:0 3px 0 #7c9788}
+@media(max-width:360px){.woodland .role-zone{padding-left:0;padding-right:0}.woodland .rolebutton{min-height:41px}}
 </style>
 </head>
 <body>
@@ -129,6 +140,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
  <section class="woodland" id="woods">
   <div class="woodlabel"><span class="eyebrow" id="stageLabel">森の はかりば</span><span class="little-legend" id="selectHint">2匹を えらぼう</span></div>
   <div class="animal-row" id="animals" style="--n:5"></div>
+ <section id="roleZone" class="role-zone" hidden><div class="role-title">どの子が ちがう数を言ったかな？</div><div class="role-choices"><button class="rolebutton plus" data-role="1">おおめ <strong>＋1</strong></button><button class="rolebutton minus" data-role="-1">ひかえめ <strong>−1</strong></button></div><div class="rolehelp" id="roleHelp">上の子をタップして しるしをつけよう</div><button class="primary" id="answerBtn" disabled>こたえあわせ</button></section>
   <div class="path" aria-hidden="true"></div>
   <div class="workbench" id="workbench">
    <div class="workheader"><strong id="workTitle">さいごの 1回</strong><span class="onecoin"><i></i><span id="coinTxt">のこり 1回</span></span></div>
@@ -138,7 +150,7 @@ button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}button
   </div>
  </section>
  <section class="records" id="recordsSection"><div class="records-head"><strong>はかった きろく</strong><span>言った数 → はかった数</span></div><div class="receipt-grid" id="receiptGrid"></div></section>
- <section id="roleZone" class="role-zone" hidden><div class="role-title">どの子が ちがう数を言ったかな？</div><div class="role-choices"><button class="rolebutton plus" data-role="1">おおめ <strong>＋1</strong></button><button class="rolebutton minus" data-role="-1">ひかえめ <strong>−1</strong></button></div><div class="rolehelp" id="roleHelp">上の子をタップして しるしをつけよう</div><button class="primary" id="answerBtn" disabled>こたえあわせ</button></section>
+
  <section id="banner" class="banner" hidden></section>
  <footer class="foot"><div class="micro">ACORN TALES  ·  THE LAST MEASURE</div><button class="repeat" id="retryBtn">はじめから</button></footer>
 </div>
@@ -305,7 +317,7 @@ function render(){const p=PUZZLES[GAME.stage],atGuess=GAME.phase==='guess'||GAME
  }else{
   $('receiptGrid').querySelectorAll('[data-receipt]').forEach(b=>b.classList.toggle('active',GAME.focus.includes(Number(b.dataset.receipt))));
  }
- $('roleZone').hidden=!atGuess;$('banner').hidden=!(GAME.phase==='win'||GAME.phase==='guess');
+ $('roleZone').hidden=GAME.phase!=='guess';$('banner').hidden=!(GAME.phase==='win'||GAME.phase==='guess');
  if(atGuess){document.querySelectorAll('[data-role]').forEach(b=>{const role=Number(b.dataset.role);b.classList.toggle('active',GAME.role===role)});let marked=Object.values(GAME.marked).filter(Boolean);$('roleHelp').textContent=p.mode==='opposite'?'多めを1匹・ひかえめを1匹、それぞれ えらんでね':'多め2匹でも、ひかえめ2匹でも いいよ';$('answerBtn').disabled=marked.length!==2||(p.mode==='opposite'&&!(marked.includes(1)&&marked.includes(-1)));}
  if(GAME.phase==='guess'){$('banner').className='banner';$('banner').innerHTML='木ふだを見ながら、ちがう数を言った2匹を見つけよう。'}
  
